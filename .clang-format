@@ -1,0 +1,13 @@
+BasedOnStyle: LLVM
+Standard: c++17
+UseTab: AlignWithSpaces
+TabWidth: 4
+IndentWidth: 4
+IndentAccessModifiers: true
+AccessModifierOffset: 4
+AllowShortBlocksOnASingleLine: Always
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Always
+AlignTrailingComments: true
+BreakBeforeBraces: Allman
+ColumnLimit: 120
