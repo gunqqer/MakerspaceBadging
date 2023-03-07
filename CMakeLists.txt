@@ -17,5 +17,7 @@ set(CMAKE_LINKER_FLAGS_DEBUG "-fsanitize=address")
 file(GLOB_RECURSE sources ./src/*.cpp ./src/*.hpp)
 
 
+
 add_executable(MakerspaceBadging ${sources})
 
+target_link_libraries(MakerspaceBadging mariadbcpp)
