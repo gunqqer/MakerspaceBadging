@@ -40,3 +40,22 @@ SQLBridgeEnum::Machine SQLBridgeEnum::MachineFromString(std::string machine)
 	if (it != MachineStrToEnum.end()) { return it->second; }
 	else { throw std::invalid_argument("Invalid Machine: " + machine); }
 }
+
+std::string SQLBridgeEnum::TrainingLevelToString(SQLBridgeEnum::TrainingLevel level)
+{
+	static const std::array<std::string, 4> LevelStr = {"untrained", "partial", "fully", "canTrain"};
+	return LevelStr.at(static_cast<int>(level));
+}
+
+std::string SQLBridgeEnum::PersonTypeToString(SQLBridgeEnum::PersonType type)
+{
+	static const std::array<std::string, 4> TypeStr = {"student", "faculty", "staff", "other"};
+	return TypeStr.at(static_cast<int>(type));
+}
+
+std::string SQLBridgeEnum::MachineToString(SQLBridgeEnum::Machine machine)
+{
+	static const std::array<std::string, 7> MachineStr = {"laser",      "d3_printers", "hand_tools", "woodshop",
+	                                                      "embroidery", "shopbot",     "vinyl"};
+	return MachineStr.at(static_cast<int>(machine));
+}

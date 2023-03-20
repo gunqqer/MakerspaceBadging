@@ -1,8 +1,12 @@
 #pragma once
 
+#include "SQLBridgeEnums.hpp"
+
 #include <cstdint>
 #include <memory>
 #include <optional>
+#include <ostream>
+#include <unordered_map>
 
 #include <mariadb/conncpp.hpp>
 #include <mariadb/conncpp/SQLString.hpp>
@@ -18,21 +22,11 @@ class SQLBridge
 		std::unique_ptr<sql::Connection> conn;
 
 	public:
-		enum class TrainingLevel {untrained, partial, fully, canTrain};
-		constexpr static std::string stringifyTrainingLevel(TrainingLevel level);
-
-		enum class PersonType {student, faculty, staff, other};
-		constexpr static std::string stringifyPersonType(PersonType type);
-
-		//Can't start it with a number so it's d3 instead of 3d
-		enum class Machine {laser, d3_printers, hand_tools, woodshop, embroidery, shopbot, vinyl};
-		//Sigh, I would much rather use a static constexpr std::vector<std::string> but it isn't that easy
-		static constexpr const char* machineName[] = {"laser", "3d_printers", "hand_tools", "woodshop", "embroidery", "shopbot"};
 
 		struct trainingData
 		{
 			std::string uuid;
-			TrainingLevel training;
+			SQLBridgeEnum::TrainingLevel training;
 			std::string trainingDate;
 			std::vector<std::string> otherInfo;
 		};
@@ -41,8 +35,9 @@ class SQLBridge
 		{
 			std::string uuid;
 			std::string email;
-			PersonType type;
+			SQLBridgeEnum::PersonType type;
 			std::string name;
+			//Maybe these should be something from std::chrono, but for now strings will due
 			std::string lastScan;
 			std::string creationDate;
 		};
@@ -57,5 +52,8 @@ class SQLBridge
 		std::optional<userData> getUserData(std::string uuid) const;
 
 		
-		trainingData getTraining(std::string uuid, Machine machine) const;
+		trainingData getTraining(std::string uuid, SQLBridgeEnum::Machine machine) const;
 };
+
+std::ostream& operator<<(std::ostream& os, const SQLBridge::trainingData& data); //For Debug
+std::ostream& operator<<(std::ostream& os, const SQLBridge::userData& data); //For Debug

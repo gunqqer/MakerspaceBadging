@@ -45,8 +45,4 @@ class SQLBridgeEnum
 		inline static PersonType PersonTypeFromString(sql::SQLString type){return PersonTypeFromString(static_cast<std::string>(type));}
 		static Machine MachineFromString(std::string machine);
 		inline static Machine MachineFromString(sql::SQLString machine){return MachineFromString(static_cast<std::string>(machine));}
-
-	private:
-		static constexpr const std::array<std::string_view, 6> MachineStr = {"laser",    "3d_printers", "hand_tools",
-		                                                                     "woodshop", "embroidery",  "shopbot"};
 };
