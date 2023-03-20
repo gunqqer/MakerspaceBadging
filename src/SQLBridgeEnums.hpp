@@ -3,6 +3,8 @@
 #include <array>
 #include <string>
 
+#include <mariadb/conncpp/SQLString.hpp>
+
 class SQLBridgeEnum
 {
 	public:
@@ -33,13 +35,16 @@ class SQLBridgeEnum
 			vinyl
 		};
 
-		static std::string TrainingLevelToString(TrainingLevel& level);
-		static std::string PersonTypeToString(PersonType& type);
-		static std::string MachineToString(Machine& machine);
+		static std::string TrainingLevelToString(TrainingLevel level);
+		static std::string PersonTypeToString(PersonType type);
+		static std::string MachineToString(Machine machine);
 
-		static TrainingLevel TrainingLevelFromString(std::string& level);
-		static PersonType PersonTypeFromString(std::string& type);
-		static Machine MachineFromString(std::string& machine);
+		static TrainingLevel TrainingLevelFromString(std::string level);
+		inline static TrainingLevel TrainingLevelFromString(sql::SQLString level){return TrainingLevelFromString(static_cast<std::string>(level));}
+		static PersonType PersonTypeFromString(std::string type);
+		inline static PersonType PersonTypeFromString(sql::SQLString type){return PersonTypeFromString(static_cast<std::string>(type));}
+		static Machine MachineFromString(std::string machine);
+		inline static Machine MachineFromString(sql::SQLString machine){return MachineFromString(static_cast<std::string>(machine));}
 
 	private:
 		static constexpr const std::array<std::string_view, 6> MachineStr = {"laser",    "3d_printers", "hand_tools",

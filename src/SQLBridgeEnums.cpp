@@ -1,11 +1,12 @@
 #include "SQLBridgeEnums.hpp"
 
 #include <stdexcept>
+#include <string>
 #include <unordered_map>
 
-SQLBridgeEnum::TrainingLevel SQLBridgeEnum::TrainingLevelFromString(std::string &level)
+SQLBridgeEnum::TrainingLevel SQLBridgeEnum::TrainingLevelFromString(std::string level)
 {
-	static const std::unordered_map<std::string_view, TrainingLevel> TrainingLevelStrToEnum = {
+	static const std::unordered_map<std::string, TrainingLevel> TrainingLevelStrToEnum = {
 		{"untrained", TrainingLevel::untrained},
 		{"partial", TrainingLevel::partial},
 		{"fully", TrainingLevel::fully},
@@ -16,22 +17,21 @@ SQLBridgeEnum::TrainingLevel SQLBridgeEnum::TrainingLevelFromString(std::string 
 	else { throw std::invalid_argument("String Not Enum" + level); }
 }
 
-SQLBridgeEnum::PersonType SQLBridgeEnum::PersonTypeFromString(std::string &type)
+SQLBridgeEnum::PersonType SQLBridgeEnum::PersonTypeFromString(std::string type)
 {
-	static const std::unordered_map<std::string_view, PersonType> PersonTypeStrToEnum = {
-		{"student", PersonType::student},
-		{"faculty", PersonType::faculty},
-		{"staff", PersonType::staff},
-		{"other", PersonType::other}};
+	static const std::unordered_map<std::string, PersonType> PersonTypeStrToEnum = {{"student", PersonType::student},
+	                                                                                {"faculty", PersonType::faculty},
+	                                                                                {"staff", PersonType::staff},
+	                                                                                {"other", PersonType::other}};
 
 	auto it = PersonTypeStrToEnum.find(type);
 	if (it != PersonTypeStrToEnum.end()) { return it->second; }
 	else { return PersonType::other; }
 }
 
-SQLBridgeEnum::Machine SQLBridgeEnum::MachineFromString(std::string &machine)
+SQLBridgeEnum::Machine SQLBridgeEnum::MachineFromString(std::string machine)
 {
-	static const std::unordered_map<std::string_view, Machine> MachineStrToEnum = {
+	static const std::unordered_map<std::string, Machine> MachineStrToEnum = {
 		{"laser", Machine::laser},       {"d3_printers", Machine::d3_printers}, {"hand_tools", Machine::hand_tools},
 		{"woodshop", Machine::woodshop}, {"embroidery", Machine::embroidery},   {"shopbot", Machine::shopbot},
 		{"vinyl", Machine::vinyl}};
