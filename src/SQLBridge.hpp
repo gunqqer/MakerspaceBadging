@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <optional>
 
 #include <mariadb/conncpp.hpp>
 #include <mariadb/conncpp/SQLString.hpp>
@@ -28,12 +29,33 @@ class SQLBridge
 		//Sigh, I would much rather use a static constexpr std::vector<std::string> but it isn't that easy
 		static constexpr const char* machineName[] = {"laser", "3d_printers", "hand_tools", "woodshop", "embroidery", "shopbot"};
 
+		struct trainingData
+		{
+			std::string uuid;
+			TrainingLevel training;
+			std::string trainingDate;
+			std::vector<std::string> otherInfo;
+		};
+
+		struct userData
+		{
+			std::string uuid;
+			std::string email;
+			PersonType type;
+			std::string name;
+			std::string lastScan;
+			std::string creationDate;
+		};
+
 		SQLBridge(sql::SQLString url, sql::Properties properties);
-		~SQLBridge() = default;
+		~SQLBridge();
 
-		std::string getUUID(uint64_t id) const;
-		std::string findUUIDfromEmail(std::string email) const;
+		std::optional<std::string> getUUID(uint64_t id) const;
+		std::optional<std::string> findUUIDfromEmail(std::string email) const;
 		std::vector<std::string> findUUIDfromName(std::string name) const; //Names are not unique, they can return more than one UUID
+		
+		std::optional<userData> getUserData(std::string uuid) const;
 
-		std::string getTraining(std::string uuid, Machine machine) const;
+		
+		trainingData getTraining(std::string uuid, Machine machine) const;
 };
