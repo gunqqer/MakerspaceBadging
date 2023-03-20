@@ -51,7 +51,7 @@ class SQLBridge
 		~SQLBridge();
 
 		std::optional<std::string> getUUID(uint64_t id) const;
-		std::optional<std::string> findUUIDfromEmail(std::string email) const;
+		std::optional<std::string> findUUIDfromEmail(std::string email) const; //Emails are unique
 		std::vector<std::string> findUUIDfromName(std::string name) const; //Names are not unique, they can return more than one UUID
 		
 		std::optional<userData> getUserData(std::string uuid) const;
