@@ -12,12 +12,9 @@ set(CMAKE_CXX_FLAGS_DEBUG "-Wall -Wextra -pedantic -Werror -D_GLIBCXX_DEBUG -las
 set(CMAKE_LINKER_FLAGS_DEBUG "-fsanitize=address")
 
 
-#enable_testing()
 
 file(GLOB_RECURSE sources ./src/*.cpp ./src/*.hpp)
 
 
-
 add_executable(MakerspaceBadging ${sources})
-
 target_link_libraries(MakerspaceBadging mariadbcpp)
