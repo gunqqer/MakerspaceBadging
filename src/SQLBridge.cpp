@@ -75,8 +75,13 @@ std::optional<SQLBridge::userData> SQLBridge::getUserData(std::string uuid) cons
 std::ostream &operator<<(std::ostream &os, const SQLBridge::trainingData &data)
 {
 	os << "UUID: " << data.uuid << "\n";
-	os << "Training Level" << SQLBridgeEnum::TrainingLevelToString(data.training) << "\n";
-	os << "";
+	os << "Training for: " << SQLBridgeEnum::MachineToString(data.machine) << "\n";
+	os << "Training Level: " << SQLBridgeEnum::TrainingLevelToString(data.training) << "\n";
+	os << "Training Date: " << data.trainingDate << "\n";
+	for (auto &str : data.otherInfo)
+	{
+		os << str << "\n";
+	}
 	return os;
 }
 
