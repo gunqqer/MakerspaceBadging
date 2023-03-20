@@ -1,7 +1,5 @@
 #pragma once
 
-#include "SQLBridgeEnums.hpp"
-
 #include <cstdint>
 #include <memory>
 #include <optional>
@@ -12,6 +10,8 @@
 #include <mariadb/conncpp/ResultSet.hpp>
 #include <mariadb/conncpp/SQLString.hpp>
 #include <mariadb/conncpp/jdbccompat.hpp>
+
+#include "SQLBridgeEnums.hpp"
 
 class SQLBridge
 {
