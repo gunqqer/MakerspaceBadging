@@ -76,6 +76,11 @@ std::ostream &operator<<(std::ostream &os, const SQLBridge::trainingData &data)
 {
 	os << "UUID: " << data.uuid << "\n";
 	os << "Training for: " << SQLBridgeEnum::MachineToString(data.machine) << "\n";
+	if (data.training == SQLBridgeEnum::TrainingLevel::untrained)
+	{ // No reason to print everything out, it's all meaningless if the user is untrained
+		os << "UNTRAINED\n";
+		return os;
+	}
 	os << "Training Level: " << SQLBridgeEnum::TrainingLevelToString(data.training) << "\n";
 	os << "Training Date: " << data.trainingDate << "\n";
 	for (auto &str : data.otherInfo)
