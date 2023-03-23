@@ -134,6 +134,23 @@ bool SQLBridge::addID(uint64_t id, std::string uuid)
 	}
 }
 
-bool SQLBridge::addPerson(userData data) {}
+bool SQLBridge::addPerson(userData &data)
+{
+	static std::unique_ptr<sql::PreparedStatement> stmntAddPerson(
+		conn->prepareStatement("INSERT INTO user_data (uuid, email, type, name) VALUES (?, ?, ?, ?)"));
+	stmntAddPerson->setString(1, data.uuid);
+	stmntAddPerson->setString(2, data.email);
+	stmntAddPerson->setString(3, SQLBridgeEnum::PersonTypeToString(data.type));
+	stmntAddPerson->setString(4, data.name);
+	try
+	{
+		stmntAddPerson->executeQuery();
+		return true;
+	}
+	catch (sql::SQLException &e)
+	{
+		return false;
+	}
+}
 
-bool SQLBridge::addTool(trainingData data) {}
+bool SQLBridge::addTool(trainingData &data) {}

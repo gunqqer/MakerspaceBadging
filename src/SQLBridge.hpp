@@ -57,8 +57,8 @@ class SQLBridge
 
 		std::string getNewUUID();
 		bool addID(uint64_t id, std::string uuid);
-		bool addPerson(userData data);
-		bool addTool(trainingData data);
+		bool addPerson(userData &data);
+		bool addTool(trainingData &data);
 };
 
 std::ostream &operator<<(std::ostream &os, const SQLBridge::trainingData &data); // For Debug
