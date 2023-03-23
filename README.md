@@ -16,7 +16,7 @@ cmake ..
 make
 ```
 
-#TODO
+# TODO
 - [ ] Finish SQLBridge
 - [ ] Create user interface
 - [ ] Add testing
