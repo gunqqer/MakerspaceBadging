@@ -54,6 +54,11 @@ class SQLBridge
 		std::optional<userData> getUserData(std::string uuid) const;
 
 		trainingData getTraining(std::string uuid, SQLBridgeEnum::Machine machine) const;
+
+		std::string getNewUUID();
+		bool addID(uint64_t id, std::string uuid);
+		bool addPerson(userData data);
+		bool addTool(trainingData data);
 };
 
 std::ostream &operator<<(std::ostream &os, const SQLBridge::trainingData &data); // For Debug

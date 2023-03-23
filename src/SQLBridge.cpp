@@ -100,3 +100,40 @@ std::ostream &operator<<(std::ostream &os, const SQLBridge::userData &data)
 	os << "Date profile created: " << data.creationDate << "\n";
 	return os;
 }
+
+std::string SQLBridge::getNewUUID()
+{
+	static std::unique_ptr<sql::PreparedStatement> stmntGetNewUUID(conn->prepareStatement("SELECT UUID()"));
+
+	try
+	{
+		std::unique_ptr<sql::ResultSet> res(stmntGetNewUUID->executeQuery());
+		res->next();
+		return static_cast<std::string>(res->getString(1));
+	}
+	catch (sql::SQLException &e)
+	{
+		return {};
+	}
+}
+
+bool SQLBridge::addID(uint64_t id, std::string uuid)
+{
+	static std::unique_ptr<sql::PreparedStatement> stmntAddId(
+		conn->prepareStatement("INSERT INTO id_uuid (id, uuid) VALUES (?, ?)"));
+	stmntAddId->setUInt64(1, id);
+	stmntAddId->setString(2, uuid);
+	try
+	{
+		stmntAddId->executeQuery();
+		return true;
+	}
+	catch (sql::SQLException &e)
+	{
+		return false;
+	}
+}
+
+bool SQLBridge::addPerson(userData data) {}
+
+bool SQLBridge::addTool(trainingData data) {}
