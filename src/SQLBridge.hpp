@@ -28,8 +28,7 @@ class SQLBridge
 				SQLBridgeEnum::TrainingLevel training;
 				std::string trainingDate;
 				SQLBridgeEnum::Machine machine;
-				std::vector<std::string> otherInfo; // The strings must have the formatted output including the human
-				                                    // readable type name and human readable value
+				std::vector<std::pair<std::string, std::string>> otherInfo; //Key, Value, human readable
 		};
 
 		struct userData

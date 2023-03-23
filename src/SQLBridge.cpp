@@ -1,5 +1,6 @@
 #include "SQLBridge.hpp"
 
+#include <exception>
 #include <iostream>
 #include <memory>
 
@@ -19,6 +20,8 @@ SQLBridge::SQLBridge(sql::SQLString url, sql::Properties properties) : url(url),
 	}
 	catch (sql::SQLException &e)
 	{
+		std::cerr << "Unable to connect to database: " << e.what() << "\n";
+		std::terminate();
 	}
 }
 
@@ -83,9 +86,9 @@ std::ostream &operator<<(std::ostream &os, const SQLBridge::trainingData &data)
 	}
 	os << "Training Level: " << SQLBridgeEnum::TrainingLevelToString(data.training) << "\n";
 	os << "Training Date: " << data.trainingDate << "\n";
-	for (auto &str : data.otherInfo)
+	for (auto &pair : data.otherInfo)
 	{
-		os << str << "\n";
+		os << pair.first << ": " << pair.second << "\n";
 	}
 	return os;
 }
@@ -125,7 +128,7 @@ bool SQLBridge::addID(uint64_t id, std::string uuid)
 	stmntAddId->setString(2, uuid);
 	try
 	{
-		stmntAddId->executeQuery();
+		std::unique_ptr<sql::ResultSet> tmp(stmntAddId->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -144,7 +147,7 @@ bool SQLBridge::addPerson(userData &data)
 	stmntAddPerson->setString(4, data.name);
 	try
 	{
-		stmntAddPerson->executeQuery();
+		std::unique_ptr<sql::ResultSet> tmp(stmntAddPerson->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -153,4 +156,7 @@ bool SQLBridge::addPerson(userData &data)
 	}
 }
 
-bool SQLBridge::addTool(trainingData &data) {}
+bool SQLBridge::addTool(trainingData &data)
+{
+	return false;
+}
