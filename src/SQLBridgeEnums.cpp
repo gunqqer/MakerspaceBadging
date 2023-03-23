@@ -12,7 +12,7 @@ SQLBridgeEnum::TrainingLevel SQLBridgeEnum::TrainingLevelFromString(std::string 
 		{"fully", TrainingLevel::fully},
 		{"canTrain", TrainingLevel::canTrain}};
 
-	auto it = TrainingLevelStrToEnum.find(level);
+	static auto it = TrainingLevelStrToEnum.find(level);
 	if (it != TrainingLevelStrToEnum.end()) { return it->second; }
 	else { throw std::invalid_argument("String Not Enum" + level); }
 }
@@ -24,7 +24,7 @@ SQLBridgeEnum::PersonType SQLBridgeEnum::PersonTypeFromString(std::string type)
 	                                                                                {"staff", PersonType::staff},
 	                                                                                {"other", PersonType::other}};
 
-	auto it = PersonTypeStrToEnum.find(type);
+	static auto it = PersonTypeStrToEnum.find(type);
 	if (it != PersonTypeStrToEnum.end()) { return it->second; }
 	else { return PersonType::other; }
 }
@@ -36,7 +36,7 @@ SQLBridgeEnum::Machine SQLBridgeEnum::MachineFromString(std::string machine)
 		{"woodshop", Machine::woodshop}, {"embroidery", Machine::embroidery},   {"shopbot", Machine::shopbot},
 		{"vinyl", Machine::vinyl}};
 
-	auto it = MachineStrToEnum.find(machine);
+	static auto it = MachineStrToEnum.find(machine);
 	if (it != MachineStrToEnum.end()) { return it->second; }
 	else { throw std::invalid_argument("Invalid Machine: " + machine); }
 }
