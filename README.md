@@ -17,6 +17,6 @@ make
 ```
 
 #TODO
-- [] Finish SQLBridge
-- [] Create user interface
-- [] Add testing
+- [ ] Finish SQLBridge
+- [ ] Create user interface
+- [ ] Add testing
