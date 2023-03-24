@@ -1,5 +1,5 @@
 # Makerspace Badging system (WIP!)
-A system that tracks user training in a Makerspace. If your machines are different you'll have to fork and adapt it yourself.
+A system that tracks user training in a Makerspace. If your machines are different you'll have to fork and adapt it yourself. Or make a pull request to make it fully generic.
 
 ## Building
 Requires C++20
@@ -20,6 +20,7 @@ make
 
 # TODO
 - [ ] Finish SQLBridge
+	- [X] Selects
 	- [ ] Inserts
 	- [ ] Deletes
 	- [ ] Updates
