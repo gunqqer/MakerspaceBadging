@@ -58,6 +58,13 @@ class SQLBridge
 		bool addID(uint64_t id, std::string uuid);
 		bool addPerson(userData &data);
 		bool addTool(trainingData &data);
+
+		//UUID may need to be updated, first arg is old UUID, if change is needed new UUID is in data
+		bool updatePerson(std::string uuid, userData &data);
+		//UUID comes from struct
+		bool updateTraining(trainingData &data);
+
+		bool deleteUser(std::string uuid);
 };
 
 std::ostream &operator<<(std::ostream &os, const SQLBridge::trainingData &data); // For Debug
