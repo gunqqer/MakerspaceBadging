@@ -32,7 +32,8 @@ class SQLBridgeEnum
 			woodshop,
 			embroidery,
 			shopbot,
-			vinyl
+			vinyl,
+			spray_booth
 		};
 
 		static std::string TrainingLevelToString(TrainingLevel level);

@@ -34,7 +34,7 @@ SQLBridgeEnum::Machine SQLBridgeEnum::MachineFromString(std::string machine)
 	static const std::unordered_map<std::string, Machine> MachineStrToEnum = {
 		{"laser", Machine::laser},       {"3d_printers", Machine::d3_printers}, {"hand_tools", Machine::hand_tools},
 		{"woodshop", Machine::woodshop}, {"embroidery", Machine::embroidery},   {"shopbot", Machine::shopbot},
-		{"vinyl", Machine::vinyl}};
+		{"vinyl", Machine::vinyl},       {"spray_booth", Machine::spray_booth}};
 
 	static auto it = MachineStrToEnum.find(machine);
 	if (it != MachineStrToEnum.end()) { return it->second; }
@@ -55,7 +55,7 @@ std::string SQLBridgeEnum::PersonTypeToString(SQLBridgeEnum::PersonType type)
 
 std::string SQLBridgeEnum::MachineToString(SQLBridgeEnum::Machine machine)
 {
-	static const std::array<std::string, 7> MachineStr = {"laser",      "3d_printers", "hand_tools", "woodshop",
-	                                                      "embroidery", "shopbot",     "vinyl"};
+	static const std::array<std::string, 8> MachineStr = {"laser",      "3d_printers", "hand_tools", "woodshop",
+	                                                      "embroidery", "shopbot",     "vinyl",      "spray_booth"};
 	return MachineStr.at(static_cast<int>(machine));
 }
