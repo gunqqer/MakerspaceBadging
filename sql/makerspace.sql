@@ -90,7 +90,7 @@ CREATE TABLE `spray_booth`
 	`uuid` UUID NOT NULL PRIMARY KEY,
 	`training` enum('untrained', 'partial', 'fully', 'canTrain') NOT NULL DEFAULT 'untrained',
 	`training_date` date NOT NULL DEFAULT CURRENT_DATE,
-	`paint_sprayer` boolean NOT NULL,
+	`paint_sprayer` boolean NOT NULL DEFAULT false,
 
 	FOREIGN KEY(uuid) REFERENCES user_data(uuid) ON UPDATE CASCADE ON DELETE CASCADE
 );
