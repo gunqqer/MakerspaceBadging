@@ -15,12 +15,6 @@
 
 class SQLBridge
 {
-	private:
-		sql::Driver *driver;
-		sql::SQLString url;
-		sql::Properties properties;
-		std::unique_ptr<sql::Connection> conn;
-
 	public:
 		struct trainingData
 		{
@@ -28,7 +22,7 @@ class SQLBridge
 				SQLBridgeEnum::TrainingLevel training;
 				std::string trainingDate;
 				SQLBridgeEnum::Machine machine;
-				std::vector<std::pair<std::string, std::string>> otherInfo; //Key, Value, human readable
+				std::vector<std::pair<std::string, std::string>> otherInfo; //Key, Value, human readable, same order as SQL table
 		};
 
 		struct userData
@@ -41,6 +35,31 @@ class SQLBridge
 				std::string lastScan;
 				std::string creationDate;
 		};
+	private:
+		sql::Driver *driver;
+		sql::SQLString url;
+		sql::Properties properties;
+		std::unique_ptr<sql::Connection> conn;
+
+		//There has to be some better way of doing this :|
+		trainingData getLaserData(std::string uuid);
+		trainingData get3DPrinterData(std::string uuid);
+		trainingData getHandToolData(std::string uuid);
+		trainingData getWoodshopData(std::string uuid);
+		trainingData getEmbroideryData(std::string uuid);
+		trainingData getShopbotData(std::string uuid);
+		trainingData getVinylData(std::string uuid);
+		trainingData getSprayBoothData(std::string uuid);
+
+		bool addLaserData(trainingData &data);
+		bool add3DPrinterData(trainingData &data);
+		bool addHandToolData(trainingData &data);
+		bool addWoodshopData(trainingData &data);
+		bool addEmbroideryData(trainingData &data);
+		bool addShopbotData(trainingData &data);
+		bool addVinylData(trainingData &data);
+		bool addSprayBoothData(trainingData &data);
+	public:
 
 		SQLBridge(sql::SQLString url, sql::Properties properties);
 		~SQLBridge();

@@ -158,5 +158,190 @@ bool SQLBridge::addPerson(userData &data)
 
 bool SQLBridge::addTool(trainingData &data)
 {
-	return false;
+	// Really there has to be some way to do this that is more sane
+	switch (data.machine)
+	{
+	case SQLBridgeEnum::Machine::laser:
+		return addLaserData(data);
+		break;
+	case SQLBridgeEnum::Machine::d3_printers:
+		return add3DPrinterData(data);
+		break;
+	case SQLBridgeEnum::Machine::hand_tools:
+		return addHandToolData(data);
+		break;
+	case SQLBridgeEnum::Machine::woodshop:
+		return addWoodshopData(data);
+		break;
+	case SQLBridgeEnum::Machine::embroidery:
+		return addEmbroideryData(data);
+		break;
+	case SQLBridgeEnum::Machine::shopbot:
+		return addShopbotData(data);
+		break;
+	case SQLBridgeEnum::Machine::vinyl:
+		return addVinylData(data);
+		break;
+	default:
+		throw std::logic_error("Unknown Enum Value!");
+	}
+}
+
+// For secondary data there must be some better way to do this, but I haven't figured it out yet
+// At least they're all booleans
+
+bool SQLBridge::addLaserData(trainingData &data)
+{
+	static std::unique_ptr<sql::PreparedStatement> stmntAddLaser(
+		conn->prepareStatement("INSERT INTO laser (uuid, training, rotary, small_laser) VALUES (?, ?, ?, ?)"));
+	stmntAddLaser->setString(1, data.uuid);
+	stmntAddLaser->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
+	stmntAddLaser->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
+	stmntAddLaser->setBoolean(4, std::stoi(data.otherInfo.at(1).second));
+	try
+	{
+		stmntAddLaser->executeQuery();
+		return true;
+	}
+	catch (sql::SQLException &e)
+	{
+		std::cerr << e.what();
+		return false;
+	}
+}
+
+bool SQLBridge::add3DPrinterData(trainingData &data)
+{
+	static std::unique_ptr<sql::PreparedStatement> stmntAdd3DPrinter(conn->prepareStatement(
+		"INSERT INTO 3d_printers (uuid, training, print_starting, ultimaker) VALUES (?, ?, ?, ?)"));
+	stmntAdd3DPrinter->setString(1, data.uuid);
+	stmntAdd3DPrinter->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
+	stmntAdd3DPrinter->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
+	stmntAdd3DPrinter->setBoolean(4, std::stoi(data.otherInfo.at(1).second));
+	try
+	{
+		stmntAdd3DPrinter->executeQuery();
+		return true;
+	}
+	catch (sql::SQLException &e)
+	{
+		std::cerr << e.what();
+		return false;
+	}
+}
+
+bool SQLBridge::addHandToolData(trainingData &data)
+{
+	static std::unique_ptr<sql::PreparedStatement> stmntAdd3DPrinter(
+		conn->prepareStatement("INSERT INTO hand_tools (uuid, training) VALUES (?, ?)"));
+	stmntAdd3DPrinter->setString(1, data.uuid);
+	stmntAdd3DPrinter->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
+	try
+	{
+		stmntAdd3DPrinter->executeQuery();
+		return true;
+	}
+	catch (sql::SQLException &e)
+	{
+		std::cerr << e.what();
+		return false;
+	}
+}
+
+bool SQLBridge::addWoodshopData(trainingData &data)
+{
+	static std::unique_ptr<sql::PreparedStatement> stmntAddWoodshop(
+		conn->prepareStatement("INSERT INTO woodshop (uuid, training, waiver) VALUES (?, ?, ?)"));
+	stmntAddWoodshop->setString(1, data.uuid);
+	stmntAddWoodshop->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
+	stmntAddWoodshop->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
+	try
+	{
+		stmntAddWoodshop->executeQuery();
+		return true;
+	}
+	catch (sql::SQLException &e)
+	{
+		std::cerr << e.what();
+		return false;
+	}
+}
+
+bool SQLBridge::addEmbroideryData(trainingData &data)
+{
+	static std::unique_ptr<sql::PreparedStatement> stmntAddEmbroidery(
+		conn->prepareStatement("INSERT INTO woodshop (uuid, training, cap) VALUES (?, ?, ?)"));
+	stmntAddEmbroidery->setString(1, data.uuid);
+	stmntAddEmbroidery->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
+	stmntAddEmbroidery->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
+	try
+	{
+		stmntAddEmbroidery->executeQuery();
+		return true;
+	}
+	catch (sql::SQLException &e)
+	{
+		std::cerr << e.what();
+		return false;
+	}
+}
+
+bool SQLBridge::addShopbotData(trainingData &data)
+{
+	static std::unique_ptr<sql::PreparedStatement> stmntAddShopbot(
+		conn->prepareStatement("INSERT INTO woodshop (uuid, training, rotary) VALUES (?, ?, ?)"));
+	stmntAddShopbot->setString(1, data.uuid);
+	stmntAddShopbot->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
+	stmntAddShopbot->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
+	try
+	{
+		stmntAddShopbot->executeQuery();
+		return true;
+	}
+	catch (sql::SQLException &e)
+	{
+		std::cerr << e.what();
+		return false;
+	}
+}
+
+bool SQLBridge::addVinylData(trainingData &data)
+{
+	static std::unique_ptr<sql::PreparedStatement> stmntAddVinyl(conn->prepareStatement(
+		"INSERT INTO woodshop (uuid, training, roland, cricut, graphgear, heat_press) VALUES (?, ?, ?, ?, ?, ?)"));
+	stmntAddVinyl->setString(1, data.uuid);
+	stmntAddVinyl->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
+	stmntAddVinyl->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
+	stmntAddVinyl->setBoolean(4, std::stoi(data.otherInfo.at(1).second));
+	stmntAddVinyl->setBoolean(5, std::stoi(data.otherInfo.at(2).second));
+	stmntAddVinyl->setBoolean(6, std::stoi(data.otherInfo.at(3).second));
+	try
+	{
+		stmntAddVinyl->executeQuery();
+		return true;
+	}
+	catch (sql::SQLException &e)
+	{
+		std::cerr << e.what();
+		return false;
+	}
+}
+
+bool SQLBridge::addSprayBoothData(trainingData &data)
+{
+	static std::unique_ptr<sql::PreparedStatement> stmntAddSprayBooth(
+		conn->prepareStatement("INSERT INTO woodshop (uuid, training, paint_sprayer) VALUES (?, ?, ?)"));
+	stmntAddSprayBooth->setString(1, data.uuid);
+	stmntAddSprayBooth->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
+	stmntAddSprayBooth->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
+	try
+	{
+		stmntAddSprayBooth->executeQuery();
+		return true;
+	}
+	catch (sql::SQLException &e)
+	{
+		std::cerr << e.what();
+		return false;
+	}
 }
