@@ -8,7 +8,7 @@ Requires [MariaDB >= 10.7](https://mariadb.com/downloads/)
 
 Requires [MariaDB C++ Connector](https://mariadb.com/docs/skysql/connect/programming-languages/cpp/)
 
-Requires [argparse](https://github.com/jamolnng/argparse)
+Requires [argparse](https://github.com/jamolnng/argparse) (CMake will automatically get argparse via FetchContent)
 
 ```
 git clone https://github.com/gunqqer/MakerspaceBadging.git

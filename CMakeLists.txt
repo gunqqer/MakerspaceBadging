@@ -12,6 +12,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_FLAGS_DEBUG "-Wall -Wextra -pedantic -Werror -D_GLIBCXX_DEBUG -lasn -fsanitize=undefined -fsanitize=address")
 set(CMAKE_LINKER_FLAGS_DEBUG "-fsanitize=address")
 
+include(FetchContent)
+FetchContent_Declare(
+    argparse
+    GIT_REPOSITORY https://github.com/p-ranav/argparse.git
+)
+FetchContent_MakeAvailable(argparse)
 
 
 file(GLOB_RECURSE sources ./src/*.cpp ./src/*.hpp)
@@ -19,3 +25,4 @@ file(GLOB_RECURSE sources ./src/*.cpp ./src/*.hpp)
 
 add_executable(MakerspaceBadging ${sources})
 target_link_libraries(MakerspaceBadging mariadbcpp)
+target_link_libraries(MakerspaceBadging argparse)
