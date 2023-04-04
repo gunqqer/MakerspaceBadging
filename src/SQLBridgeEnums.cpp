@@ -14,7 +14,7 @@ SQLBridgeEnum::TrainingLevel SQLBridgeEnum::TrainingLevelFromString(std::string 
 
 	static auto it = TrainingLevelStrToEnum.find(level);
 	if (it != TrainingLevelStrToEnum.end()) { return it->second; }
-	else { throw std::invalid_argument("String Not Enum" + level); }
+	else { throw std::invalid_argument("String Not Enum: " + level); }
 }
 
 SQLBridgeEnum::PersonType SQLBridgeEnum::PersonTypeFromString(std::string type)
@@ -26,7 +26,7 @@ SQLBridgeEnum::PersonType SQLBridgeEnum::PersonTypeFromString(std::string type)
 
 	static auto it = PersonTypeStrToEnum.find(type);
 	if (it != PersonTypeStrToEnum.end()) { return it->second; }
-	else { return PersonType::other; }
+	else { return PersonType::other; } // Other is a catchall, hopefully I wont have to change it
 }
 
 SQLBridgeEnum::Machine SQLBridgeEnum::MachineFromString(std::string machine)
