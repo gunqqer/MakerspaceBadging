@@ -64,14 +64,14 @@ class SQLBridge
 		SQLBridge(sql::SQLString url, sql::Properties properties);
 		~SQLBridge();
 
-		std::optional<std::string> getUUID(uint64_t id) const;
-		std::optional<std::string> findUUIDfromEmail(std::string email) const; // Emails are unique
+		std::optional<std::string> getUUID(uint64_t id);
+		std::optional<std::string> findUUIDfromEmail(std::string email); // Emails are unique
 		std::vector<std::string>
-		findUUIDfromName(std::string name) const; // Names are not unique, they can return more than one UUID
+		findUUIDfromName(std::string name); // Names are not unique, they can return more than one UUID
 
-		std::optional<userData> getUserData(std::string uuid) const;
+		std::optional<userData> getUserData(std::string uuid);
 
-		trainingData getTraining(std::string uuid, SQLBridgeEnum::Machine machine) const;
+		trainingData getTraining(std::string uuid, SQLBridgeEnum::Machine machine);
 
 		std::string getNewUUID();
 		bool addID(uint64_t id, std::string uuid);

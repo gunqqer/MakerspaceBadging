@@ -30,7 +30,7 @@ SQLBridge::~SQLBridge()
 	conn->close();
 }
 
-std::optional<std::string> SQLBridge::getUUID(uint64_t id) const
+std::optional<std::string> SQLBridge::getUUID(uint64_t id)
 {
 	static std::unique_ptr<sql::PreparedStatement> stmntGetUUID(
 		conn->prepareStatement("SELECT uuid FROM `id_uuid` WHERE id = ?"));
@@ -48,7 +48,7 @@ std::optional<std::string> SQLBridge::getUUID(uint64_t id) const
 	}
 }
 
-std::optional<SQLBridge::userData> SQLBridge::getUserData(std::string uuid) const
+std::optional<SQLBridge::userData> SQLBridge::getUserData(std::string uuid)
 {
 	static std::unique_ptr<sql::PreparedStatement> stmntGetUserData(
 		conn->prepareStatement("SELECT uuid, email, type, name, last_scan, creation FROM user_data WHERE uuid = ?"));
@@ -345,3 +345,43 @@ bool SQLBridge::addSprayBoothData(trainingData &data)
 		return false;
 	}
 }
+
+SQLBridge::trainingData SQLBridge::getTraining(std::string uuid, SQLBridgeEnum::Machine machine)
+{
+	// Really there has to be some way to do this that is more sane
+	switch (machine)
+	{
+	case SQLBridgeEnum::Machine::laser:
+		return getLaserData(uuid);
+		break;
+	case SQLBridgeEnum::Machine::d3_printers:
+		return get3DPrinterData(uuid);
+		break;
+	case SQLBridgeEnum::Machine::hand_tools:
+		return getHandToolData(uuid);
+		break;
+	case SQLBridgeEnum::Machine::woodshop:
+		return getWoodshopData(uuid);
+		break;
+	case SQLBridgeEnum::Machine::embroidery:
+		return getEmbroideryData(uuid);
+		break;
+	case SQLBridgeEnum::Machine::shopbot:
+		return getShopbotData(uuid);
+		break;
+	case SQLBridgeEnum::Machine::vinyl:
+		return getVinylData(uuid);
+		break;
+	default:
+		throw std::logic_error("Unknown Enum Value!");
+	}
+}
+
+SQLBridge::trainingData SQLBridge::getLaserData(std::string uuid) {}
+SQLBridge::trainingData SQLBridge::get3DPrinterData(std::string uuid) {}
+SQLBridge::trainingData SQLBridge::getHandToolData(std::string uuid) {}
+SQLBridge::trainingData SQLBridge::getWoodshopData(std::string uuid) {}
+SQLBridge::trainingData SQLBridge::getEmbroideryData(std::string uuid) {}
+SQLBridge::trainingData SQLBridge::getShopbotData(std::string uuid) {}
+SQLBridge::trainingData SQLBridge::getVinylData(std::string uuid) {}
+SQLBridge::trainingData SQLBridge::getSprayBoothData(std::string uuid) {}
