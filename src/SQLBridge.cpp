@@ -30,7 +30,7 @@ SQLBridge::~SQLBridge()
 	conn->close();
 }
 
-std::optional<std::string> SQLBridge::getUUID(uint64_t id)
+std::optional<std::string> SQLBridge::getUUID(uint64_t id) const
 {
 	static std::unique_ptr<sql::PreparedStatement> stmntGetUUID(
 		conn->prepareStatement("SELECT uuid FROM `id_uuid` WHERE id = ?"));
@@ -48,7 +48,7 @@ std::optional<std::string> SQLBridge::getUUID(uint64_t id)
 	}
 }
 
-std::optional<SQLBridge::userData> SQLBridge::getUserData(std::string uuid)
+std::optional<SQLBridge::userData> SQLBridge::getUserData(std::string uuid) const
 {
 	static std::unique_ptr<sql::PreparedStatement> stmntGetUserData(
 		conn->prepareStatement("SELECT uuid, email, type, name, last_scan, creation FROM user_data WHERE uuid = ?"));
@@ -104,7 +104,7 @@ std::ostream &operator<<(std::ostream &os, const SQLBridge::userData &data)
 	return os;
 }
 
-std::string SQLBridge::getNewUUID()
+std::string SQLBridge::getNewUUID() const
 {
 	static std::unique_ptr<sql::PreparedStatement> stmntGetNewUUID(conn->prepareStatement("SELECT UUID()"));
 
@@ -346,7 +346,7 @@ bool SQLBridge::addSprayBoothData(trainingData &data)
 	}
 }
 
-SQLBridge::trainingData SQLBridge::getTraining(std::string uuid, SQLBridgeEnum::Machine machine)
+SQLBridge::trainingData SQLBridge::getTraining(std::string uuid, SQLBridgeEnum::Machine machine) const
 {
 	// Really there has to be some way to do this that is more sane
 	switch (machine)
@@ -377,11 +377,11 @@ SQLBridge::trainingData SQLBridge::getTraining(std::string uuid, SQLBridgeEnum::
 	}
 }
 
-SQLBridge::trainingData SQLBridge::getLaserData(std::string uuid) {}
-SQLBridge::trainingData SQLBridge::get3DPrinterData(std::string uuid) {}
-SQLBridge::trainingData SQLBridge::getHandToolData(std::string uuid) {}
-SQLBridge::trainingData SQLBridge::getWoodshopData(std::string uuid) {}
-SQLBridge::trainingData SQLBridge::getEmbroideryData(std::string uuid) {}
-SQLBridge::trainingData SQLBridge::getShopbotData(std::string uuid) {}
-SQLBridge::trainingData SQLBridge::getVinylData(std::string uuid) {}
-SQLBridge::trainingData SQLBridge::getSprayBoothData(std::string uuid) {}
+SQLBridge::trainingData SQLBridge::getLaserData(std::string uuid) const {}
+SQLBridge::trainingData SQLBridge::get3DPrinterData(std::string uuid) const {}
+SQLBridge::trainingData SQLBridge::getHandToolData(std::string uuid) const {}
+SQLBridge::trainingData SQLBridge::getWoodshopData(std::string uuid) const {}
+SQLBridge::trainingData SQLBridge::getEmbroideryData(std::string uuid) const {}
+SQLBridge::trainingData SQLBridge::getShopbotData(std::string uuid) const {}
+SQLBridge::trainingData SQLBridge::getVinylData(std::string uuid) const {}
+SQLBridge::trainingData SQLBridge::getSprayBoothData(std::string uuid) const {}

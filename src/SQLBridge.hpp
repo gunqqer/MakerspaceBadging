@@ -42,14 +42,14 @@ class SQLBridge
 		std::unique_ptr<sql::Connection> conn;
 
 		//There has to be some better way of doing this :|
-		trainingData getLaserData(std::string uuid);
-		trainingData get3DPrinterData(std::string uuid);
-		trainingData getHandToolData(std::string uuid);
-		trainingData getWoodshopData(std::string uuid);
-		trainingData getEmbroideryData(std::string uuid);
-		trainingData getShopbotData(std::string uuid);
-		trainingData getVinylData(std::string uuid);
-		trainingData getSprayBoothData(std::string uuid);
+		trainingData getLaserData(std::string uuid) const;
+		trainingData get3DPrinterData(std::string uuid) const;
+		trainingData getHandToolData(std::string uuid) const;
+		trainingData getWoodshopData(std::string uuid) const;
+		trainingData getEmbroideryData(std::string uuid) const;
+		trainingData getShopbotData(std::string uuid) const;
+		trainingData getVinylData(std::string uuid) const;
+		trainingData getSprayBoothData(std::string uuid) const;
 
 		bool addLaserData(trainingData &data);
 		bool add3DPrinterData(trainingData &data);
@@ -64,16 +64,16 @@ class SQLBridge
 		SQLBridge(sql::SQLString url, sql::Properties properties);
 		~SQLBridge();
 
-		std::optional<std::string> getUUID(uint64_t id);
-		std::optional<std::string> findUUIDfromEmail(std::string email); // Emails are unique
+		std::optional<std::string> getUUID(uint64_t id) const;
+		std::optional<std::string> findUUIDfromEmail(std::string email) const; // Emails are unique
 		std::vector<std::string>
-		findUUIDfromName(std::string name); // Names are not unique, they can return more than one UUID
+		findUUIDfromName(std::string name) const; // Names are not unique, they can return more than one UUID
 
-		std::optional<userData> getUserData(std::string uuid);
+		std::optional<userData> getUserData(std::string uuid) const;
 
-		trainingData getTraining(std::string uuid, SQLBridgeEnum::Machine machine);
+		trainingData getTraining(std::string uuid, SQLBridgeEnum::Machine machine) const;
 
-		std::string getNewUUID();
+		std::string getNewUUID() const;
 		bool addID(uint64_t id, std::string uuid);
 		bool addPerson(userData &data);
 		bool addTool(trainingData &data);
