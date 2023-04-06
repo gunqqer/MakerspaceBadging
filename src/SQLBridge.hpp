@@ -22,7 +22,8 @@ class SQLBridge
 				SQLBridgeEnum::TrainingLevel training;
 				std::string trainingDate;
 				SQLBridgeEnum::Machine machine;
-				std::vector<std::pair<std::string, std::string>> otherInfo; //Key, Value, human readable, same order as SQL table
+				std::vector<std::pair<std::string, std::string>>
+					otherInfo; // Key, Value, human readable, same order as SQL table
 		};
 
 		struct userData
@@ -35,13 +36,14 @@ class SQLBridge
 				std::string lastScan;
 				std::string creationDate;
 		};
+
 	private:
 		sql::Driver *driver;
 		sql::SQLString url;
 		sql::Properties properties;
 		std::unique_ptr<sql::Connection> conn;
 
-		//There has to be some better way of doing this :|
+		// There has to be some better way of doing this :|
 		trainingData getLaserData(std::string uuid) const;
 		trainingData get3DPrinterData(std::string uuid) const;
 		trainingData getHandToolData(std::string uuid) const;
@@ -59,8 +61,8 @@ class SQLBridge
 		bool addShopbotData(trainingData &data);
 		bool addVinylData(trainingData &data);
 		bool addSprayBoothData(trainingData &data);
-	public:
 
+	public:
 		SQLBridge(sql::SQLString url, sql::Properties properties);
 		~SQLBridge();
 
@@ -78,9 +80,9 @@ class SQLBridge
 		bool addPerson(userData &data);
 		bool addTool(trainingData &data);
 
-		//UUID may need to be updated, first arg is old UUID, if change is needed new UUID is in data
+		// UUID may need to be updated, first arg is old UUID, if change is needed new UUID is in data
 		bool updatePerson(std::string uuid, userData &data);
-		//UUID comes from struct
+		// UUID comes from struct
 		bool updateTraining(trainingData &data);
 
 		bool deleteUser(std::string uuid);

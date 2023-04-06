@@ -41,9 +41,18 @@ class SQLBridgeEnum
 		static std::string MachineToString(Machine machine);
 
 		static TrainingLevel TrainingLevelFromString(std::string level);
-		inline static TrainingLevel TrainingLevelFromString(sql::SQLString level){return TrainingLevelFromString(static_cast<std::string>(level));}
+		inline static TrainingLevel TrainingLevelFromString(sql::SQLString level)
+		{
+			return TrainingLevelFromString(static_cast<std::string>(level));
+		}
 		static PersonType PersonTypeFromString(std::string type);
-		inline static PersonType PersonTypeFromString(sql::SQLString type){return PersonTypeFromString(static_cast<std::string>(type));}
+		inline static PersonType PersonTypeFromString(sql::SQLString type)
+		{
+			return PersonTypeFromString(static_cast<std::string>(type));
+		}
 		static Machine MachineFromString(std::string machine);
-		inline static Machine MachineFromString(sql::SQLString machine){return MachineFromString(static_cast<std::string>(machine));}
+		inline static Machine MachineFromString(sql::SQLString machine)
+		{
+			return MachineFromString(static_cast<std::string>(machine));
+		}
 };
