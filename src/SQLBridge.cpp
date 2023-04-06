@@ -1,5 +1,6 @@
 #include "SQLBridge.hpp"
 
+#include <algorithm>
 #include <exception>
 #include <iostream>
 #include <memory>
@@ -11,7 +12,11 @@
 
 #include "SQLBridgeEnums.hpp"
 
-SQLBridge::SQLBridge(sql::SQLString url, sql::Properties properties) : url(url), properties(properties)
+using Result = std::unique_ptr<sql::ResultSet>;
+using Statement = std::unique_ptr<sql::PreparedStatement>;
+
+SQLBridge::SQLBridge(sql::SQLString url, sql::Properties properties) : url(url),
+	  properties(properties)
 {
 	try
 	{
@@ -32,12 +37,11 @@ SQLBridge::~SQLBridge()
 
 std::optional<std::string> SQLBridge::getUUID(uint64_t id) const
 {
-	static std::unique_ptr<sql::PreparedStatement> stmntGetUUID(
-		conn->prepareStatement("SELECT uuid FROM `id_uuid` WHERE id = ?"));
+	static Statement stmntGetUUID(conn->prepareStatement("SELECT uuid FROM `id_uuid` WHERE id = ?"));
 	stmntGetUUID->setUInt64(1, id);
 	try
 	{
-		std::unique_ptr<sql::ResultSet> res(stmntGetUUID->executeQuery());
+		Result res(stmntGetUUID->executeQuery());
 		res->next();
 		return static_cast<std::string>(res->getString(1));
 	}
@@ -50,14 +54,14 @@ std::optional<std::string> SQLBridge::getUUID(uint64_t id) const
 
 std::optional<SQLBridge::userData> SQLBridge::getUserData(std::string uuid) const
 {
-	static std::unique_ptr<sql::PreparedStatement> stmntGetUserData(
+	static Statement stmntGetUserData(
 		conn->prepareStatement("SELECT uuid, email, type, name, last_scan, creation FROM user_data WHERE uuid = ?"));
 	stmntGetUserData->setString(1, uuid);
 
 	userData data;
 	try
 	{
-		std::unique_ptr<sql::ResultSet> res(stmntGetUserData->executeQuery());
+		Result res(stmntGetUserData->executeQuery());
 		res->next();
 
 		data.uuid = res->getString(1);
@@ -106,11 +110,11 @@ std::ostream &operator<<(std::ostream &os, const SQLBridge::userData &data)
 
 std::string SQLBridge::getNewUUID() const
 {
-	static std::unique_ptr<sql::PreparedStatement> stmntGetNewUUID(conn->prepareStatement("SELECT UUID()"));
+	static Statement stmntGetNewUUID(conn->prepareStatement("SELECT UUID()"));
 
 	try
 	{
-		std::unique_ptr<sql::ResultSet> res(stmntGetNewUUID->executeQuery());
+		Result res(stmntGetNewUUID->executeQuery());
 		res->next();
 		return static_cast<std::string>(res->getString(1));
 	}
@@ -122,13 +126,12 @@ std::string SQLBridge::getNewUUID() const
 
 bool SQLBridge::addID(uint64_t id, std::string uuid)
 {
-	static std::unique_ptr<sql::PreparedStatement> stmntAddId(
-		conn->prepareStatement("INSERT INTO id_uuid (id, uuid) VALUES (?, ?)"));
+	static Statement stmntAddId(conn->prepareStatement("INSERT INTO id_uuid (id, uuid) VALUES (?, ?)"));
 	stmntAddId->setUInt64(1, id);
 	stmntAddId->setString(2, uuid);
 	try
 	{
-		std::unique_ptr<sql::ResultSet> tmp(stmntAddId->executeQuery());
+		Result tmp(stmntAddId->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -139,7 +142,7 @@ bool SQLBridge::addID(uint64_t id, std::string uuid)
 
 bool SQLBridge::addPerson(userData &data)
 {
-	static std::unique_ptr<sql::PreparedStatement> stmntAddPerson(
+	static Statement stmntAddPerson(
 		conn->prepareStatement("INSERT INTO user_data (uuid, email, type, name) VALUES (?, ?, ?, ?)"));
 	stmntAddPerson->setString(1, data.uuid);
 	stmntAddPerson->setString(2, data.email);
@@ -147,7 +150,7 @@ bool SQLBridge::addPerson(userData &data)
 	stmntAddPerson->setString(4, data.name);
 	try
 	{
-		std::unique_ptr<sql::ResultSet> tmp(stmntAddPerson->executeQuery());
+		Result tmp(stmntAddPerson->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -192,7 +195,7 @@ bool SQLBridge::addTool(trainingData &data)
 
 bool SQLBridge::addLaserData(trainingData &data)
 {
-	static std::unique_ptr<sql::PreparedStatement> stmntAddLaser(
+	static Statement stmntAddLaser(
 		conn->prepareStatement("INSERT INTO laser (uuid, training, rotary, small_laser) VALUES (?, ?, ?, ?)"));
 	stmntAddLaser->setString(1, data.uuid);
 	stmntAddLaser->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
@@ -200,7 +203,7 @@ bool SQLBridge::addLaserData(trainingData &data)
 	stmntAddLaser->setBoolean(4, std::stoi(data.otherInfo.at(1).second));
 	try
 	{
-		std::unique_ptr<sql::ResultSet> tmp(stmntAddLaser->executeQuery());
+		Result tmp(stmntAddLaser->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -212,7 +215,7 @@ bool SQLBridge::addLaserData(trainingData &data)
 
 bool SQLBridge::add3DPrinterData(trainingData &data)
 {
-	static std::unique_ptr<sql::PreparedStatement> stmntAdd3DPrinter(conn->prepareStatement(
+	static Statement stmntAdd3DPrinter(conn->prepareStatement(
 		"INSERT INTO 3d_printers (uuid, training, print_starting, ultimaker) VALUES (?, ?, ?, ?)"));
 	stmntAdd3DPrinter->setString(1, data.uuid);
 	stmntAdd3DPrinter->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
@@ -220,7 +223,7 @@ bool SQLBridge::add3DPrinterData(trainingData &data)
 	stmntAdd3DPrinter->setBoolean(4, std::stoi(data.otherInfo.at(1).second));
 	try
 	{
-		std::unique_ptr<sql::ResultSet> tmp(stmntAdd3DPrinter->executeQuery());
+		Result tmp(stmntAdd3DPrinter->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -232,13 +235,12 @@ bool SQLBridge::add3DPrinterData(trainingData &data)
 
 bool SQLBridge::addHandToolData(trainingData &data)
 {
-	static std::unique_ptr<sql::PreparedStatement> stmntAdd3DPrinter(
-		conn->prepareStatement("INSERT INTO hand_tools (uuid, training) VALUES (?, ?)"));
+	static Statement stmntAdd3DPrinter(conn->prepareStatement("INSERT INTO hand_tools (uuid, training) VALUES (?, ?)"));
 	stmntAdd3DPrinter->setString(1, data.uuid);
 	stmntAdd3DPrinter->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
 	try
 	{
-		std::unique_ptr<sql::ResultSet> tmp(stmntAdd3DPrinter->executeQuery());
+		Result tmp(stmntAdd3DPrinter->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -250,14 +252,14 @@ bool SQLBridge::addHandToolData(trainingData &data)
 
 bool SQLBridge::addWoodshopData(trainingData &data)
 {
-	static std::unique_ptr<sql::PreparedStatement> stmntAddWoodshop(
+	static Statement stmntAddWoodshop(
 		conn->prepareStatement("INSERT INTO woodshop (uuid, training, waiver) VALUES (?, ?, ?)"));
 	stmntAddWoodshop->setString(1, data.uuid);
 	stmntAddWoodshop->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
 	stmntAddWoodshop->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
 	try
 	{
-		std::unique_ptr<sql::ResultSet> tmp(stmntAddWoodshop->executeQuery());
+		Result tmp(stmntAddWoodshop->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -269,14 +271,14 @@ bool SQLBridge::addWoodshopData(trainingData &data)
 
 bool SQLBridge::addEmbroideryData(trainingData &data)
 {
-	static std::unique_ptr<sql::PreparedStatement> stmntAddEmbroidery(
+	static Statement stmntAddEmbroidery(
 		conn->prepareStatement("INSERT INTO woodshop (uuid, training, cap) VALUES (?, ?, ?)"));
 	stmntAddEmbroidery->setString(1, data.uuid);
 	stmntAddEmbroidery->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
 	stmntAddEmbroidery->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
 	try
 	{
-		std::unique_ptr<sql::ResultSet> tmp(stmntAddEmbroidery->executeQuery());
+		Result tmp(stmntAddEmbroidery->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -288,14 +290,14 @@ bool SQLBridge::addEmbroideryData(trainingData &data)
 
 bool SQLBridge::addShopbotData(trainingData &data)
 {
-	static std::unique_ptr<sql::PreparedStatement> stmntAddShopbot(
+	static Statement stmntAddShopbot(
 		conn->prepareStatement("INSERT INTO woodshop (uuid, training, rotary) VALUES (?, ?, ?)"));
 	stmntAddShopbot->setString(1, data.uuid);
 	stmntAddShopbot->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
 	stmntAddShopbot->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
 	try
 	{
-		std::unique_ptr<sql::ResultSet> tmp(stmntAddShopbot->executeQuery());
+		Result tmp(stmntAddShopbot->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -307,7 +309,7 @@ bool SQLBridge::addShopbotData(trainingData &data)
 
 bool SQLBridge::addVinylData(trainingData &data)
 {
-	static std::unique_ptr<sql::PreparedStatement> stmntAddVinyl(conn->prepareStatement(
+	static Statement stmntAddVinyl(conn->prepareStatement(
 		"INSERT INTO woodshop (uuid, training, roland, cricut, graphgear, heat_press) VALUES (?, ?, ?, ?, ?, ?)"));
 	stmntAddVinyl->setString(1, data.uuid);
 	stmntAddVinyl->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
@@ -317,7 +319,7 @@ bool SQLBridge::addVinylData(trainingData &data)
 	stmntAddVinyl->setBoolean(6, std::stoi(data.otherInfo.at(3).second));
 	try
 	{
-		std::unique_ptr<sql::ResultSet> tmp(stmntAddVinyl->executeQuery());
+		Result tmp(stmntAddVinyl->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -329,14 +331,14 @@ bool SQLBridge::addVinylData(trainingData &data)
 
 bool SQLBridge::addSprayBoothData(trainingData &data)
 {
-	static std::unique_ptr<sql::PreparedStatement> stmntAddSprayBooth(
+	static Statement stmntAddSprayBooth(
 		conn->prepareStatement("INSERT INTO woodshop (uuid, training, paint_sprayer) VALUES (?, ?, ?)"));
 	stmntAddSprayBooth->setString(1, data.uuid);
 	stmntAddSprayBooth->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
 	stmntAddSprayBooth->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
 	try
 	{
-		std::unique_ptr<sql::ResultSet> tmp(stmntAddSprayBooth->executeQuery());
+		Result tmp(stmntAddSprayBooth->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -379,12 +381,12 @@ SQLBridge::trainingData SQLBridge::getTraining(std::string uuid, SQLBridgeEnum::
 
 SQLBridge::trainingData SQLBridge::getLaserData(std::string uuid) const
 {
-	static std::unique_ptr<sql::PreparedStatement> stmntGetLaser(
+	static Statement stmntGetLaser(
 		conn->prepareStatement("SELECT uuid, training, training_date, rotary, small_laser FROM laser WHERE uuid = ?"));
 	stmntGetLaser->setString(1, uuid);
 	try
 	{
-		std::unique_ptr<sql::ResultSet> res(stmntGetLaser->executeQuery());
+		Result res(stmntGetLaser->executeQuery());
 	}
 	catch (sql::SQLException &e)
 	{
