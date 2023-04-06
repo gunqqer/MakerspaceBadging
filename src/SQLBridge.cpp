@@ -200,7 +200,7 @@ bool SQLBridge::addLaserData(trainingData &data)
 	stmntAddLaser->setBoolean(4, std::stoi(data.otherInfo.at(1).second));
 	try
 	{
-		stmntAddLaser->executeQuery();
+		std::unique_ptr<sql::ResultSet> tmp(stmntAddLaser->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -220,7 +220,7 @@ bool SQLBridge::add3DPrinterData(trainingData &data)
 	stmntAdd3DPrinter->setBoolean(4, std::stoi(data.otherInfo.at(1).second));
 	try
 	{
-		stmntAdd3DPrinter->executeQuery();
+		std::unique_ptr<sql::ResultSet> tmp(stmntAdd3DPrinter->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -238,7 +238,7 @@ bool SQLBridge::addHandToolData(trainingData &data)
 	stmntAdd3DPrinter->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
 	try
 	{
-		stmntAdd3DPrinter->executeQuery();
+		std::unique_ptr<sql::ResultSet> tmp(stmntAdd3DPrinter->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -257,7 +257,7 @@ bool SQLBridge::addWoodshopData(trainingData &data)
 	stmntAddWoodshop->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
 	try
 	{
-		stmntAddWoodshop->executeQuery();
+		std::unique_ptr<sql::ResultSet> tmp(stmntAddWoodshop->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -276,7 +276,7 @@ bool SQLBridge::addEmbroideryData(trainingData &data)
 	stmntAddEmbroidery->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
 	try
 	{
-		stmntAddEmbroidery->executeQuery();
+		std::unique_ptr<sql::ResultSet> tmp(stmntAddEmbroidery->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -295,7 +295,7 @@ bool SQLBridge::addShopbotData(trainingData &data)
 	stmntAddShopbot->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
 	try
 	{
-		stmntAddShopbot->executeQuery();
+		std::unique_ptr<sql::ResultSet> tmp(stmntAddShopbot->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -317,7 +317,7 @@ bool SQLBridge::addVinylData(trainingData &data)
 	stmntAddVinyl->setBoolean(6, std::stoi(data.otherInfo.at(3).second));
 	try
 	{
-		stmntAddVinyl->executeQuery();
+		std::unique_ptr<sql::ResultSet> tmp(stmntAddVinyl->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -336,7 +336,7 @@ bool SQLBridge::addSprayBoothData(trainingData &data)
 	stmntAddSprayBooth->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
 	try
 	{
-		stmntAddSprayBooth->executeQuery();
+		std::unique_ptr<sql::ResultSet> tmp(stmntAddSprayBooth->executeQuery());
 		return true;
 	}
 	catch (sql::SQLException &e)
@@ -377,7 +377,19 @@ SQLBridge::trainingData SQLBridge::getTraining(std::string uuid, SQLBridgeEnum::
 	}
 }
 
-SQLBridge::trainingData SQLBridge::getLaserData(std::string uuid) const {}
+SQLBridge::trainingData SQLBridge::getLaserData(std::string uuid) const
+{
+	static std::unique_ptr<sql::PreparedStatement> stmntGetLaser(
+		conn->prepareStatement("SELECT uuid, training, training_date, rotary, small_laser FROM laser WHERE uuid = ?"));
+	stmntGetLaser->setString(1, uuid);
+	try
+	{
+		std::unique_ptr<sql::ResultSet> res(stmntGetLaser->executeQuery());
+	}
+	catch (sql::SQLException &e)
+	{
+	}
+}
 SQLBridge::trainingData SQLBridge::get3DPrinterData(std::string uuid) const {}
 SQLBridge::trainingData SQLBridge::getHandToolData(std::string uuid) const {}
 SQLBridge::trainingData SQLBridge::getWoodshopData(std::string uuid) const {}
