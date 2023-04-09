@@ -44,14 +44,24 @@ class SQLBridge
 		std::unique_ptr<sql::Connection> conn;
 
 		// There has to be some better way of doing this :|
-		trainingData getLaserData(std::string uuid) const;
-		trainingData get3DPrinterData(std::string uuid) const;
-		trainingData getHandToolData(std::string uuid) const;
-		trainingData getWoodshopData(std::string uuid) const;
-		trainingData getEmbroideryData(std::string uuid) const;
-		trainingData getShopbotData(std::string uuid) const;
-		trainingData getVinylData(std::string uuid) const;
-		trainingData getSprayBoothData(std::string uuid) const;
+		// Maybe have dynamic Statements that assemble the statement from strings based on the machine type? For now
+		// this will work
+		std::optional<trainingData> getLaserData(std::string uuid) const;
+		std::optional<trainingData> get3DPrinterData(std::string uuid) const;
+		std::optional<trainingData> getHandToolData(std::string uuid) const;
+		std::optional<trainingData> getWoodshopData(std::string uuid) const;
+		std::optional<trainingData> getEmbroideryData(std::string uuid) const;
+		std::optional<trainingData> getShopbotData(std::string uuid) const;
+		std::optional<trainingData> getVinylData(std::string uuid) const;
+		std::optional<trainingData> getSprayBoothData(std::string uuid) const;
+		// Well at least this is common between all the tables
+		inline trainingData commonData(sql::ResultSet* res) const
+		{
+			SQLBridge::trainingData data{static_cast<std::string>(res->getString(1)),
+			                             SQLBridgeEnum::TrainingLevelFromString(res->getString(2)),
+			                             static_cast<std::string>(res->getString(3))};
+			return data;
+		}
 
 		bool addLaserData(trainingData &data);
 		bool add3DPrinterData(trainingData &data);
@@ -73,7 +83,7 @@ class SQLBridge
 
 		std::optional<userData> getUserData(std::string uuid) const;
 
-		trainingData getTraining(std::string uuid, SQLBridgeEnum::Machine machine) const;
+		std::optional<trainingData> getTraining(std::string uuid, SQLBridgeEnum::Machine machine) const;
 
 		std::string getNewUUID() const;
 		bool addID(uint64_t id, std::string uuid);

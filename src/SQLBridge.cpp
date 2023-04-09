@@ -9,6 +9,7 @@
 #include <mariadb/conncpp/Exception.hpp>
 #include <mariadb/conncpp/PreparedStatement.hpp>
 #include <mariadb/conncpp/ResultSet.hpp>
+#include <string>
 
 #include "SQLBridgeEnums.hpp"
 
@@ -348,7 +349,7 @@ bool SQLBridge::addSprayBoothData(trainingData &data)
 	}
 }
 
-SQLBridge::trainingData SQLBridge::getTraining(std::string uuid, SQLBridgeEnum::Machine machine) const
+std::optional<SQLBridge::trainingData> SQLBridge::getTraining(std::string uuid, SQLBridgeEnum::Machine machine) const
 {
 	// Really there has to be some way to do this that is more sane
 	switch (machine)
@@ -379,7 +380,7 @@ SQLBridge::trainingData SQLBridge::getTraining(std::string uuid, SQLBridgeEnum::
 	}
 }
 
-SQLBridge::trainingData SQLBridge::getLaserData(std::string uuid) const
+std::optional<SQLBridge::trainingData> SQLBridge::getLaserData(std::string uuid) const
 {
 	static Statement stmntGetLaser(
 		conn->prepareStatement("SELECT uuid, training, training_date, rotary, small_laser FROM laser WHERE uuid = ?"));
@@ -387,15 +388,39 @@ SQLBridge::trainingData SQLBridge::getLaserData(std::string uuid) const
 	try
 	{
 		Result res(stmntGetLaser->executeQuery());
+		res->next();
+		trainingData data = commonData(res.get());
+		data.otherInfo.emplace_back("rotary", res->getString(4));
+		data.otherInfo.emplace_back("small_laser", res->getString(5));
+		return data;
 	}
 	catch (sql::SQLException &e)
 	{
+		return {};
 	}
 }
-SQLBridge::trainingData SQLBridge::get3DPrinterData(std::string uuid) const {}
-SQLBridge::trainingData SQLBridge::getHandToolData(std::string uuid) const {}
-SQLBridge::trainingData SQLBridge::getWoodshopData(std::string uuid) const {}
-SQLBridge::trainingData SQLBridge::getEmbroideryData(std::string uuid) const {}
-SQLBridge::trainingData SQLBridge::getShopbotData(std::string uuid) const {}
-SQLBridge::trainingData SQLBridge::getVinylData(std::string uuid) const {}
-SQLBridge::trainingData SQLBridge::getSprayBoothData(std::string uuid) const {}
+std::optional<SQLBridge::trainingData> SQLBridge::get3DPrinterData(std::string uuid) const
+{
+	static Statement stmntGetLaser(
+		conn->prepareStatement("SELECT uuid, training, training_date, rotary, small_laser FROM laser WHERE uuid = ?"));
+	stmntGetLaser->setString(1, uuid);
+	try
+	{
+		Result res(stmntGetLaser->executeQuery());
+		res->next();
+		trainingData data{commonData(res.get())};
+		data.otherInfo.emplace_back("rotary", res->getString(4));
+		data.otherInfo.emplace_back("small_laser", res->getString(5));
+		return data;
+	}
+	catch (sql::SQLException &e)
+	{
+		return {};
+	}
+}
+std::optional<SQLBridge::trainingData> SQLBridge::getHandToolData(std::string uuid) const {}
+std::optional<SQLBridge::trainingData> SQLBridge::getWoodshopData(std::string uuid) const {}
+std::optional<SQLBridge::trainingData> SQLBridge::getEmbroideryData(std::string uuid) const {}
+std::optional<SQLBridge::trainingData> SQLBridge::getShopbotData(std::string uuid) const {}
+std::optional<SQLBridge::trainingData> SQLBridge::getVinylData(std::string uuid) const {}
+std::optional<SQLBridge::trainingData> SQLBridge::getSprayBoothData(std::string uuid) const {}
