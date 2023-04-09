@@ -528,3 +528,33 @@ std::optional<SQLBridge::trainingData> SQLBridge::getSprayBoothData(std::string 
 		return {};
 	}
 }
+
+bool SQLBridge::deleteUser(std::string uuid)
+{
+	static Statement stmntDeleteUser(conn->prepareStatement("DELETE FROM user_data WHERE uuid = ?"));
+	stmntDeleteUser->setString(1, uuid);
+	try
+	{
+		Result res(stmntDeleteUser->executeQuery());
+		return true;
+	}
+	catch (sql::SQLException &e)
+	{
+		return false;
+	}
+}
+
+bool SQLBridge::deleteID(uint64_t id)
+{
+	static Statement stmntDeleteID(conn->prepareStatement("DELETE FROM id_uuid WHERE id = ?"));
+	stmntDeleteID->setUInt64(1, id);
+	try
+	{
+		Result res(stmntDeleteID->executeQuery());
+		return true;
+	}
+	catch (sql::SQLException &e)
+	{
+		return false;
+	}
+}

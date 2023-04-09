@@ -96,6 +96,7 @@ class SQLBridge
 		bool updateTraining(trainingData &data);
 
 		bool deleteUser(std::string uuid);
+		bool deleteID(uint64_t id);
 };
 
 std::ostream &operator<<(std::ostream &os, const SQLBridge::trainingData &data); // For Debug

@@ -21,8 +21,8 @@ make
 # TODO
 - [ ] Finish SQLBridge
 	- [X] Selects
-	- [ ] Inserts
-	- [ ] Deletes
+	- [x] Inserts
+	- [x] Deletes
 	- [ ] Updates
 - [ ] Create user interface
 - [ ] Add testing
