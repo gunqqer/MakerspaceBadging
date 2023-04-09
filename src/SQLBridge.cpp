@@ -401,16 +401,16 @@ std::optional<SQLBridge::trainingData> SQLBridge::getLaserData(std::string uuid)
 }
 std::optional<SQLBridge::trainingData> SQLBridge::get3DPrinterData(std::string uuid) const
 {
-	static Statement stmntGetLaser(
-		conn->prepareStatement("SELECT uuid, training, training_date, rotary, small_laser FROM laser WHERE uuid = ?"));
-	stmntGetLaser->setString(1, uuid);
+	static Statement stmntGet3DPrinter(conn->prepareStatement(
+		"SELECT uuid, training, training_date, print_starting, ultimaker FROM 3d_printers WHERE uuid = ?"));
+	stmntGet3DPrinter->setString(1, uuid);
 	try
 	{
-		Result res(stmntGetLaser->executeQuery());
+		Result res(stmntGet3DPrinter->executeQuery());
 		res->next();
 		trainingData data{commonData(res.get())};
-		data.otherInfo.emplace_back("rotary", res->getString(4));
-		data.otherInfo.emplace_back("small_laser", res->getString(5));
+		data.otherInfo.emplace_back("print_starting", res->getString(4));
+		data.otherInfo.emplace_back("ultimaker", res->getString(5));
 		return data;
 	}
 	catch (sql::SQLException &e)
@@ -418,9 +418,113 @@ std::optional<SQLBridge::trainingData> SQLBridge::get3DPrinterData(std::string u
 		return {};
 	}
 }
-std::optional<SQLBridge::trainingData> SQLBridge::getHandToolData(std::string uuid) const {}
-std::optional<SQLBridge::trainingData> SQLBridge::getWoodshopData(std::string uuid) const {}
-std::optional<SQLBridge::trainingData> SQLBridge::getEmbroideryData(std::string uuid) const {}
-std::optional<SQLBridge::trainingData> SQLBridge::getShopbotData(std::string uuid) const {}
-std::optional<SQLBridge::trainingData> SQLBridge::getVinylData(std::string uuid) const {}
-std::optional<SQLBridge::trainingData> SQLBridge::getSprayBoothData(std::string uuid) const {}
+std::optional<SQLBridge::trainingData> SQLBridge::getHandToolData(std::string uuid) const
+{
+	static Statement stmntGetHandTool(
+		conn->prepareStatement("SELECT uuid, training, training_date FROM hand_tools WHERE uuid = ?"));
+	stmntGetHandTool->setString(1, uuid);
+	try
+	{
+		Result res(stmntGetHandTool->executeQuery());
+		res->next();
+		trainingData data{commonData(res.get())};
+		return data;
+	}
+	catch (sql::SQLException &e)
+	{
+		return {};
+	}
+}
+std::optional<SQLBridge::trainingData> SQLBridge::getWoodshopData(std::string uuid) const
+{
+	static Statement stmntGetWoodshop(
+		conn->prepareStatement("SELECT uuid, training, training_date, waiver FROM woodshop WHERE uuid = ?"));
+	stmntGetWoodshop->setString(1, uuid);
+	try
+	{
+		Result res(stmntGetWoodshop->executeQuery());
+		res->next();
+		trainingData data{commonData(res.get())};
+		data.otherInfo.emplace_back("waiver", res->getString(4));
+		return data;
+	}
+	catch (sql::SQLException &e)
+	{
+		return {};
+	}
+}
+std::optional<SQLBridge::trainingData> SQLBridge::getEmbroideryData(std::string uuid) const
+{
+	static Statement stmntGetEmbroidery(
+		conn->prepareStatement("SELECT uuid, training, training_date, cap FROM embroidery WHERE uuid = ?"));
+	stmntGetEmbroidery->setString(1, uuid);
+	try
+	{
+		Result res(stmntGetEmbroidery->executeQuery());
+		res->next();
+		trainingData data{commonData(res.get())};
+		data.otherInfo.emplace_back("cap", res->getString(4));
+		return data;
+	}
+	catch (sql::SQLException &e)
+	{
+		return {};
+	}
+}
+std::optional<SQLBridge::trainingData> SQLBridge::getShopbotData(std::string uuid) const
+{
+	static Statement stmntGetShopbot(
+		conn->prepareStatement("SELECT uuid, training, training_date, rotary FROM shopbot WHERE uuid = ?"));
+	stmntGetShopbot->setString(1, uuid);
+	try
+	{
+		Result res(stmntGetShopbot->executeQuery());
+		res->next();
+		trainingData data{commonData(res.get())};
+		data.otherInfo.emplace_back("rotary", res->getString(4));
+		return data;
+	}
+	catch (sql::SQLException &e)
+	{
+		return {};
+	}
+}
+std::optional<SQLBridge::trainingData> SQLBridge::getVinylData(std::string uuid) const
+{
+	static Statement stmntGetVinyl(conn->prepareStatement(
+		"SELECT uuid, training, training_date, roland, cricut, graphgear, heat_press FROM vinyl WHERE uuid = ?"));
+	stmntGetVinyl->setString(1, uuid);
+	try
+	{
+		Result res(stmntGetVinyl->executeQuery());
+		res->next();
+		trainingData data{commonData(res.get())};
+		data.otherInfo.emplace_back("roland", res->getString(4));
+		data.otherInfo.emplace_back("cricut", res->getString(5));
+		data.otherInfo.emplace_back("graphgear", res->getString(6));
+		data.otherInfo.emplace_back("heat_press", res->getString(7));
+		return data;
+	}
+	catch (sql::SQLException &e)
+	{
+		return {};
+	}
+}
+std::optional<SQLBridge::trainingData> SQLBridge::getSprayBoothData(std::string uuid) const
+{
+	static Statement stmntGetSprayBooth(
+		conn->prepareStatement("SELECT uuid, training, training_date, paint_sprayer FROM spray_booth WHERE uuid = ?"));
+	stmntGetSprayBooth->setString(1, uuid);
+	try
+	{
+		Result res(stmntGetSprayBooth->executeQuery());
+		res->next();
+		trainingData data{commonData(res.get())};
+		data.otherInfo.emplace_back("paint_sprayer", res->getString(4));
+		return data;
+	}
+	catch (sql::SQLException &e)
+	{
+		return {};
+	}
+}
