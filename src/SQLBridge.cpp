@@ -390,6 +390,7 @@ std::optional<SQLBridge::trainingData> SQLBridge::getLaserData(std::string uuid)
 		Result res(stmntGetLaser->executeQuery());
 		res->next();
 		trainingData data = commonData(res.get());
+		data.machine = SQLBridgeEnum::Machine::laser;
 		data.otherInfo.emplace_back("rotary", res->getString(4));
 		data.otherInfo.emplace_back("small_laser", res->getString(5));
 		return data;
@@ -409,6 +410,7 @@ std::optional<SQLBridge::trainingData> SQLBridge::get3DPrinterData(std::string u
 		Result res(stmntGet3DPrinter->executeQuery());
 		res->next();
 		trainingData data{commonData(res.get())};
+		data.machine = SQLBridgeEnum::Machine::d3_printers;
 		data.otherInfo.emplace_back("print_starting", res->getString(4));
 		data.otherInfo.emplace_back("ultimaker", res->getString(5));
 		return data;
@@ -428,6 +430,7 @@ std::optional<SQLBridge::trainingData> SQLBridge::getHandToolData(std::string uu
 		Result res(stmntGetHandTool->executeQuery());
 		res->next();
 		trainingData data{commonData(res.get())};
+		data.machine = SQLBridgeEnum::Machine::hand_tools;
 		return data;
 	}
 	catch (sql::SQLException &e)
@@ -445,6 +448,7 @@ std::optional<SQLBridge::trainingData> SQLBridge::getWoodshopData(std::string uu
 		Result res(stmntGetWoodshop->executeQuery());
 		res->next();
 		trainingData data{commonData(res.get())};
+		data.machine = SQLBridgeEnum::Machine::woodshop;
 		data.otherInfo.emplace_back("waiver", res->getString(4));
 		return data;
 	}
@@ -463,6 +467,7 @@ std::optional<SQLBridge::trainingData> SQLBridge::getEmbroideryData(std::string 
 		Result res(stmntGetEmbroidery->executeQuery());
 		res->next();
 		trainingData data{commonData(res.get())};
+		data.machine = SQLBridgeEnum::Machine::embroidery;
 		data.otherInfo.emplace_back("cap", res->getString(4));
 		return data;
 	}
@@ -481,6 +486,7 @@ std::optional<SQLBridge::trainingData> SQLBridge::getShopbotData(std::string uui
 		Result res(stmntGetShopbot->executeQuery());
 		res->next();
 		trainingData data{commonData(res.get())};
+		data.machine = SQLBridgeEnum::Machine::shopbot;
 		data.otherInfo.emplace_back("rotary", res->getString(4));
 		return data;
 	}
@@ -499,6 +505,7 @@ std::optional<SQLBridge::trainingData> SQLBridge::getVinylData(std::string uuid)
 		Result res(stmntGetVinyl->executeQuery());
 		res->next();
 		trainingData data{commonData(res.get())};
+		data.machine = SQLBridgeEnum::Machine::vinyl;
 		data.otherInfo.emplace_back("roland", res->getString(4));
 		data.otherInfo.emplace_back("cricut", res->getString(5));
 		data.otherInfo.emplace_back("graphgear", res->getString(6));
@@ -520,6 +527,7 @@ std::optional<SQLBridge::trainingData> SQLBridge::getSprayBoothData(std::string 
 		Result res(stmntGetSprayBooth->executeQuery());
 		res->next();
 		trainingData data{commonData(res.get())};
+		data.machine = SQLBridgeEnum::Machine::spray_booth;
 		data.otherInfo.emplace_back("paint_sprayer", res->getString(4));
 		return data;
 	}
@@ -579,7 +587,7 @@ bool SQLBridge::updatePerson(std::string uuid, userData &data)
 	}
 }
 
-bool SQLBridge::updateTool(trainingData &data)
+bool SQLBridge::updateTraining(trainingData &data)
 {
 	// Really there has to be some way to do this that is more sane
 	switch (data.machine)
