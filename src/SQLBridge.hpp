@@ -72,6 +72,14 @@ class SQLBridge
 		bool addVinylData(trainingData &data);
 		bool addSprayBoothData(trainingData &data);
 
+		bool updateLaserData(trainingData &data);
+		bool update3DPrinterData(trainingData &data);
+		bool updateHandToolData(trainingData &data);
+		bool updateWoodshopData(trainingData &data);
+		bool updateEmbroideryData(trainingData &data);
+		bool updateShopbotData(trainingData &data);
+		bool updateVinylData(trainingData &data);
+		bool updateSprayBoothData(trainingData &data);
 	public:
 		SQLBridge(sql::SQLString url, sql::Properties properties);
 		~SQLBridge();
