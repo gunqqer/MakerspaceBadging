@@ -623,12 +623,13 @@ bool SQLBridge::updateTraining(trainingData &data)
 
 bool SQLBridge::updateLaserData(trainingData &data)
 {
-	static Statement stmntUpdateLaser(
-		conn->prepareStatement("INSERT INTO laser (uuid, training, rotary, small_laser) VALUES (?, ?, ?, ?)"));
-	stmntUpdateLaser->setString(1, data.uuid);
-	stmntUpdateLaser->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
+	static Statement stmntUpdateLaser(conn->prepareStatement(
+		"UPDATE laser SET training = ?, training_date = ?, rotary = ?, small_laser = ? WHERE uuid = ?"));
+	stmntUpdateLaser->setString(1, SQLBridgeEnum::TrainingLevelToString(data.training));
+	stmntUpdateLaser->setString(2, data.trainingDate);
 	stmntUpdateLaser->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
 	stmntUpdateLaser->setBoolean(4, std::stoi(data.otherInfo.at(1).second));
+	stmntUpdateLaser->setString(5, data.uuid);
 	try
 	{
 		Result tmp(stmntUpdateLaser->executeQuery());
@@ -644,11 +645,12 @@ bool SQLBridge::updateLaserData(trainingData &data)
 bool SQLBridge::update3DPrinterData(trainingData &data)
 {
 	static Statement stmntUpdate3DPrinter(conn->prepareStatement(
-		"INSERT INTO 3d_printers (uuid, training, print_starting, ultimaker) VALUES (?, ?, ?, ?)"));
-	stmntUpdate3DPrinter->setString(1, data.uuid);
-	stmntUpdate3DPrinter->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
+		"UPDATE 3d_printers SET training = ?, training_date = ?, print_starting = ?, ultimaker = ? WHERE uuid = ?"));
+	stmntUpdate3DPrinter->setString(1, SQLBridgeEnum::TrainingLevelToString(data.training));
+	stmntUpdate3DPrinter->setString(2, data.trainingDate);
 	stmntUpdate3DPrinter->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
 	stmntUpdate3DPrinter->setBoolean(4, std::stoi(data.otherInfo.at(1).second));
+	stmntUpdate3DPrinter->setString(5, data.uuid);
 	try
 	{
 		Result tmp(stmntUpdate3DPrinter->executeQuery());
@@ -663,10 +665,9 @@ bool SQLBridge::update3DPrinterData(trainingData &data)
 
 bool SQLBridge::updateHandToolData(trainingData &data)
 {
-	static Statement stmntUpdate3DPrinter(
-		conn->prepareStatement("INSERT INTO hand_tools (uuid, training) VALUES (?, ?)"));
-	stmntUpdate3DPrinter->setString(1, data.uuid);
-	stmntUpdate3DPrinter->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
+	static Statement stmntUpdate3DPrinter(conn->prepareStatement("UPDATE hand_tools SET training = ? WHERE uuid = ?)"));
+	stmntUpdate3DPrinter->setString(1, SQLBridgeEnum::TrainingLevelToString(data.training));
+	stmntUpdate3DPrinter->setString(2, data.uuid);
 	try
 	{
 		Result tmp(stmntUpdate3DPrinter->executeQuery());
@@ -682,10 +683,10 @@ bool SQLBridge::updateHandToolData(trainingData &data)
 bool SQLBridge::updateWoodshopData(trainingData &data)
 {
 	static Statement stmntUpdateWoodshop(
-		conn->prepareStatement("INSERT INTO woodshop (uuid, training, waiver) VALUES (?, ?, ?)"));
-	stmntUpdateWoodshop->setString(1, data.uuid);
-	stmntUpdateWoodshop->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
-	stmntUpdateWoodshop->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
+		conn->prepareStatement("UPDATE woodshop SET training = ?, waiver = ? WHERE uuid = ?)"));
+	stmntUpdateWoodshop->setString(1, SQLBridgeEnum::TrainingLevelToString(data.training));
+	stmntUpdateWoodshop->setBoolean(2, std::stoi(data.otherInfo.at(0).second));
+	stmntUpdateWoodshop->setString(3, data.uuid);
 	try
 	{
 		Result tmp(stmntUpdateWoodshop->executeQuery());
@@ -701,10 +702,10 @@ bool SQLBridge::updateWoodshopData(trainingData &data)
 bool SQLBridge::updateEmbroideryData(trainingData &data)
 {
 	static Statement stmntUpdateEmbroidery(
-		conn->prepareStatement("INSERT INTO woodshop (uuid, training, cap) VALUES (?, ?, ?)"));
-	stmntUpdateEmbroidery->setString(1, data.uuid);
-	stmntUpdateEmbroidery->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
-	stmntUpdateEmbroidery->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
+		conn->prepareStatement("UPDATE embroidery SET training = ?, cap = ? WHERE uuid = ?"));
+	stmntUpdateEmbroidery->setString(1, SQLBridgeEnum::TrainingLevelToString(data.training));
+	stmntUpdateEmbroidery->setBoolean(2, std::stoi(data.otherInfo.at(0).second));
+	stmntUpdateEmbroidery->setString(3, data.uuid);
 	try
 	{
 		Result tmp(stmntUpdateEmbroidery->executeQuery());
@@ -720,10 +721,10 @@ bool SQLBridge::updateEmbroideryData(trainingData &data)
 bool SQLBridge::updateShopbotData(trainingData &data)
 {
 	static Statement stmntUpdateShopbot(
-		conn->prepareStatement("INSERT INTO woodshop (uuid, training, rotary) VALUES (?, ?, ?)"));
-	stmntUpdateShopbot->setString(1, data.uuid);
-	stmntUpdateShopbot->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
-	stmntUpdateShopbot->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
+		conn->prepareStatement("UPDATE shopbot SET training = ?, rotary = ? WHERE uuid = ?"));
+	stmntUpdateShopbot->setString(1, SQLBridgeEnum::TrainingLevelToString(data.training));
+	stmntUpdateShopbot->setBoolean(2, std::stoi(data.otherInfo.at(0).second));
+	stmntUpdateShopbot->setString(3, data.uuid);
 	try
 	{
 		Result tmp(stmntUpdateShopbot->executeQuery());
@@ -739,13 +740,13 @@ bool SQLBridge::updateShopbotData(trainingData &data)
 bool SQLBridge::updateVinylData(trainingData &data)
 {
 	static Statement stmntUpdateVinyl(conn->prepareStatement(
-		"INSERT INTO woodshop (uuid, training, roland, cricut, graphgear, heat_press) VALUES (?, ?, ?, ?, ?, ?)"));
-	stmntUpdateVinyl->setString(1, data.uuid);
-	stmntUpdateVinyl->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
-	stmntUpdateVinyl->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
-	stmntUpdateVinyl->setBoolean(4, std::stoi(data.otherInfo.at(1).second));
-	stmntUpdateVinyl->setBoolean(5, std::stoi(data.otherInfo.at(2).second));
-	stmntUpdateVinyl->setBoolean(6, std::stoi(data.otherInfo.at(3).second));
+		"UPDATE vinyl SET training = ?, roland = ?, cricut = ?, graphgear = ?, heat_press = ? WHERE uuid = ?"));
+	stmntUpdateVinyl->setString(1, SQLBridgeEnum::TrainingLevelToString(data.training));
+	stmntUpdateVinyl->setBoolean(2, std::stoi(data.otherInfo.at(0).second));
+	stmntUpdateVinyl->setBoolean(3, std::stoi(data.otherInfo.at(1).second));
+	stmntUpdateVinyl->setBoolean(4, std::stoi(data.otherInfo.at(2).second));
+	stmntUpdateVinyl->setBoolean(5, std::stoi(data.otherInfo.at(3).second));
+	stmntUpdateVinyl->setString(6, data.uuid);
 	try
 	{
 		Result tmp(stmntUpdateVinyl->executeQuery());
@@ -761,10 +762,10 @@ bool SQLBridge::updateVinylData(trainingData &data)
 bool SQLBridge::updateSprayBoothData(trainingData &data)
 {
 	static Statement stmntUpdateSprayBooth(
-		conn->prepareStatement("INSERT INTO woodshop (uuid, training, paint_sprayer) VALUES (?, ?, ?)"));
-	stmntUpdateSprayBooth->setString(1, data.uuid);
-	stmntUpdateSprayBooth->setString(2, SQLBridgeEnum::TrainingLevelToString(data.training));
-	stmntUpdateSprayBooth->setBoolean(3, std::stoi(data.otherInfo.at(0).second));
+		conn->prepareStatement("UPDATE spray_booth SET training = ?, paint_sprayer = ? WHERE uuid = ?"));
+	stmntUpdateSprayBooth->setString(1, SQLBridgeEnum::TrainingLevelToString(data.training));
+	stmntUpdateSprayBooth->setBoolean(2, std::stoi(data.otherInfo.at(0).second));
+	stmntUpdateSprayBooth->setString(3, data.uuid);
 	try
 	{
 		Result tmp(stmntUpdateSprayBooth->executeQuery());

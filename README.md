@@ -19,11 +19,11 @@ make
 ```
 
 # TODO
-- [ ] Finish SQLBridge
+- [x] Finish SQLBridge
 	- [X] Selects
 	- [x] Inserts
 	- [x] Deletes
-	- [ ] Updates
+	- [x] Updates
 - [ ] Create user interface
 - [ ] Add testing
 - [ ] Add CLI arguments
