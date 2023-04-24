@@ -24,6 +24,7 @@ make
 	- [x] Inserts
 	- [x] Deletes
 	- [x] Updates
+- [x] Menu system
 - [ ] Create user interface
 - [ ] Add testing
 - [ ] Add CLI arguments
