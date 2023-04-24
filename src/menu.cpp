@@ -8,15 +8,13 @@
 
 int menu::selection(const std::string &title, const std::vector<std::string> &options)
 {
-	std::cout << title << std::endl;
+	std::cout << title << "\n";
 	for (int i = 0; i < options.size(); i++)
 	{
-		std::cout << i << ". " << options[i] << std::endl;
+		std::cout << i << ". " << options[i] << "\n";
 	}
 
 	std::string input;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	std::cin.clear();
 	std::getline(std::cin, input);
 
 	int selection = -1;
@@ -39,8 +37,6 @@ int menu::inputInt(const std::string &title)
 	std::cout << title << "\n> ";
 
 	std::string input;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	std::cin.clear();
 	std::getline(std::cin, input);
 
 	int value = -1;
@@ -62,8 +58,7 @@ std::string menu::inputName()
 
 	// Read the user's input
 	std::string name;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	std::cin.clear();
+
 	std::getline(std::cin, name);
 
 	return name;
@@ -74,8 +69,7 @@ std::string menu::inputDate()
 	std::cout << "Input date (YYYY-MM-DD)\n> ";
 
 	std::string date;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	std::cin.clear();
+
 	std::getline(std::cin, date);
 
 	// Check if the input matches the expected format
@@ -89,8 +83,7 @@ bool menu::inputBool(const std::string &title)
 	std::cout << title << " [y/n]\n> ";
 
 	std::string input;
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	std::cin.clear();
+
 	std::getline(std::cin, input);
 
 	if (input == "y" || input == "Y") { return true; }
@@ -103,8 +96,6 @@ std::uint64_t menu::inputID()
 	std::uint64_t id;
 	std::string input;
 
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	std::cin.clear();
 	std::cout << "Enter an ID (or 'quit' to exit)\n> ";
 	std::getline(std::cin, input);
 
