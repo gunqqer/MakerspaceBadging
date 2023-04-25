@@ -1,14 +1,38 @@
 #include "Badging.hpp"
 
+#include <cstdint>
+#include <exception>
+#include <mariadb/conncpp/SQLString.hpp>
+#include <mariadb/conncpp/jdbccompat.hpp>
+
 void Badging::run()
 {
-	// TODO use argparse to get these instead of hardcoding
-	sql::SQLString url("jdbc:mariadb://localhost:3306/makerspace");
-	// Use a properties map for the other connection options
-	sql::Properties properties({{"user", "make"}, {"password", "make"}});
 
-	SQLBridge bridge(url, properties);
-
+	int userSelection = -1;
 	bool STOPPROGRAM = false;
-	while (!STOPPROGRAM) {}
+	while (!STOPPROGRAM)
+	{
+		userSelection = menu::selection(mainMenu.first, mainMenu.second);
+		switch (userSelection)
+		{
+		case 1:
+			scanID();
+			break;
+		case 2:
+			search();
+			break;
+		case 3:
+			STOPPROGRAM = true;
+			break;
+		}
+	}
+
+	// Do any cleanup here if needed
+}
+
+void Badging::scanID()
+{
+	std::optional<std::string> uuid = bridge.getUUID(menu::inputID());
+	if (uuid.has_value()) {}
+	else {}
 }
