@@ -777,3 +777,18 @@ bool SQLBridge::updateSprayBoothData(trainingData &data)
 		return false;
 	}
 }
+
+bool SQLBridge::updateScanDate(std::string uuid)
+{
+	static Statement stmntUpdateScan(conn->prepareStatement("UPDATE user_data SET last_scan = CURRENT_DATE"));
+	try
+	{
+		Result tmp(stmntUpdateScan->executeQuery());
+		return true;
+	}
+	catch (sql::SQLException &e)
+	{
+		std::cerr << e.what();
+		return false;
+	}
+}

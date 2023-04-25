@@ -103,6 +103,8 @@ class SQLBridge
 		// UUID comes from struct
 		bool updateTraining(trainingData &data);
 
+		bool updateScanDate(std::string uuid);
+
 		bool deleteUser(std::string uuid);
 		bool deleteID(uint64_t id);
 };

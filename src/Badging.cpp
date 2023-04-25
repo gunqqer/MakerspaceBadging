@@ -8,11 +8,10 @@
 void Badging::run()
 {
 
-	int userSelection = -1;
 	bool STOPPROGRAM = false;
 	while (!STOPPROGRAM)
 	{
-		userSelection = menu::selection(mainMenu.first, mainMenu.second);
+		int userSelection = menu::selection(mainMenu.first, mainMenu.second);
 		switch (userSelection)
 		{
 		case 1:
@@ -33,6 +32,11 @@ void Badging::run()
 void Badging::scanID()
 {
 	std::optional<std::string> uuid = bridge.getUUID(menu::inputID());
-	if (uuid.has_value()) {}
+	if (uuid.has_value()) { updateLastScan(uuid.value()); }
 	else {}
+}
+
+void Badging::search()
+{
+	int userSelection = menu::selection(searchMenu.first, searchMenu.second);
 }

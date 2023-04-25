@@ -17,7 +17,7 @@ class Badging
 		const menuString addUpdateMenu{"Add/Update machine training", {"Add/Update again", "Finish/Return"}};
 		
 		void scanID();
-		void updateLastScan();
+		void updateLastScan(std::string uuid);
 		void search();
 	public:
 		Badging(const sql::SQLString& url, const sql::Properties& properties) : bridge(url, properties) {};
