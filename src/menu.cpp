@@ -78,7 +78,7 @@ std::string menu::inputDate()
 	else { return ""; }
 }
 
-bool menu::inputBool(const std::string &title)
+std::optional<bool> menu::inputBool(const std::string &title)
 {
 	std::cout << title << " [y/n]\n> ";
 
@@ -88,7 +88,7 @@ bool menu::inputBool(const std::string &title)
 
 	if (input == "y" || input == "Y") { return true; }
 	else if (input == "n" || input == "N") { return false; }
-	else { return false; }
+	else { return {}; }
 }
 
 std::uint64_t menu::inputID()
