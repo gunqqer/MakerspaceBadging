@@ -4,20 +4,19 @@
 #include <exception>
 #include <iostream>
 #include <memory>
+#include <string>
 
 #include <mariadb/conncpp/Connection.hpp>
 #include <mariadb/conncpp/Exception.hpp>
 #include <mariadb/conncpp/PreparedStatement.hpp>
 #include <mariadb/conncpp/ResultSet.hpp>
-#include <string>
 
 #include "SQLBridgeEnums.hpp"
 
 using Result = std::unique_ptr<sql::ResultSet>;
 using Statement = std::unique_ptr<sql::PreparedStatement>;
 
-SQLBridge::SQLBridge(sql::SQLString url, sql::Properties properties) : url(url),
-	  properties(properties)
+SQLBridge::SQLBridge(sql::SQLString url, sql::Properties properties) : url(url), properties(properties)
 {
 	try
 	{

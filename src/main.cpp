@@ -3,53 +3,50 @@
 
 #include <argparse/argparse.hpp>
 
-#include <mariadb/conncpp.hpp>
-#include <mariadb/conncpp/ResultSet.hpp>
-#include <mariadb/conncpp/jdbccompat.hpp>
+#include "Badging.hpp"
+#include "SQLBridge.hpp"
+#include "SQLBridgeEnums.hpp"
+#include "menu.hpp"
 
 int main(int argc, const char *argv[])
 {
-	try
-	{
-		// Instantiate Driver
-		sql::Driver *driver = sql::mariadb::get_driver_instance();
+	sql::SQLString url("jdbc:mariadb://localhost:3306/makerspace");
 
-		// Configure Connection, including initial database name "test":
-		sql::SQLString url("jdbc:mariadb://localhost:3306/");
+	// Use a properties map for the other connection options
+	sql::Properties properties({{"user", "make"}, {"password", "make"}});
 
-		// Use a properties map for the other connection options
-		sql::Properties properties({{"user", "make"}, {"password", "make"}});
+	SQLBridge bridge(url, properties);
+	bridge.updateScanDate("421a9edd-c061-11ed-a025-09fac8fb94f1");
+	// Badging program(url, properties);
+	// program.run();
 
-		// Establish Connection
-		// Use a smart pointer for extra safety
-		std::unique_ptr<sql::Connection> conn(driver->connect(url, properties));
+	// std::cout << menu::selection("This is a selection thingymabob", {"test", "tester", "tested"}) << "\n";
 
-		// Use Connection
-		// ...
-		std::unique_ptr<sql::Statement> stmnt(conn->createStatement());
-		std::unique_ptr<sql::ResultSet> res(stmnt->executeQuery("select * from makerspace.user_data"));
+	// std::cout << menu::inputDate() << "\n";
 
-		while (res.get()->next())
-		{
-			std::cout << "id = " << res->getString(1);
-			std::cout << ", email = " << res->getString(2);
-			std::cout << ", name = " << res->getString(4);
-			std::cout << ", last scan = " << res->getString(5);
-		}
+	// std::cout << menu::inputName() << "\n";
 
-		// Close Connection
-		conn->close();
-	}
+	// std::cout << menu::inputBool("BOOLEANS") << "\n";
 
-	// Catch Exceptions
-	catch (sql::SQLException &e)
-	{
-		std::cerr << "Error Connecting to the database: " << e.what() << std::endl;
+	// bridge.addID(6010030000023871, "421a9edd-c061-11ed-a025-09fac8fb94f1");
+	// if (bridge.getUUID(6010030000023871) == "421a9edd-c061-11ed-a025-09fac8fb94f1") { std::cout << "It works\n"; }
+	// else { std::cout << "Failure!\n"; }
 
-		// Exit (Failed)
-		return 1;
-	}
+	// SQLBridge::userData tmp{"421a9edd-c061-11ed-a025-09fac8fb94f1",
+	//"test@test.com",
+	// SQLBridgeEnum::PersonType::student,
+	//"Testperson",
+	//"",
+	//""};
+	// bridge.addPerson(tmp);
 
-	// Exit (Success)
+	// SQLBridge::trainingData lasertest{"421a9edd-c061-11ed-a025-09fac8fb94f1", SQLBridgeEnum::TrainingLevel::fully,
+	//"2023-04-19", SQLBridgeEnum::Machine::laser};
+	// lasertest.otherInfo.emplace_back("rotary", "0");
+	// lasertest.otherInfo.emplace_back("small_laser", "1");
+
+	// bridge.updateTraining(lasertest);
+
+	// std::cout << bridge.getTraining("421a9edd-c061-11ed-a025-09fac8fb94f1", SQLBridgeEnum::Machine::laser).value();
 	return 0;
-}
+	}
