@@ -15,3 +15,20 @@ build
 tags
 .cache
 .vim
+
+##Ignore LaTeX aux files
+presentation/*.aux
+presentation/*.lof
+presentation/*.log
+presentation/*.lot
+presentation/*.fls
+presentation/*.out
+presentation/*.toc
+presentation/*.fmt
+presentation/*.fot
+presentation/*.cb
+presentation/*.cb2
+presentation/*.lb
+presentation/*.snm
+presentation/*.out
+presentation/*.nav
